@@ -1,0 +1,22 @@
+/* Light palette shared by the wallet and its sheets. */
+.calm{background:#fafafa;color:#1b1b1e;color-scheme:light}
+.calm button:focus-visible{outline-color:#76767d}
+.calm-summary{color:#77777d}.calm-summary>span:last-child{color:#313136}.calm-summary small{color:#77777d}
+.calm-card{background:linear-gradient(120deg,#e8e8eb,#d4d4d9);color:#202024}.calm-card.secondary{background:linear-gradient(120deg,#eeece7,#ddd9d0);color:#34312b}
+.calm-card small,.calm-digits{opacity:.7}.calm-card-caption{color:#74747a}
+.segmented .calm-tabs{background:#eaeaec}.segmented .calm-tabs button{color:#737379}.segmented .calm-tabs button[aria-selected=true]{background:#fff;color:#202024;box-shadow:0 1px 4px #00000012}
+.calm-row{border-color:#e7e7e9}.calm-icon{background:#eeeeF0;color:#606067}.calm-name small{color:#76767e}.calm-value{color:#29292e}.calm-total{color:#74747d}
+.calm-ring circle{stroke:#e1e1e5}.calm-ring circle+circle{stroke:#505057}.calm-ring small{color:#77777d}
+.segmented .calm-add-dock button{background:#252529;color:#fff;box-shadow:0 4px 18px #00000020}.calm .bc-indicator{background:#212125}
+.bc-overlay{background:#15151b40;backdrop-filter:blur(6px)}
+.calm .bc-sheet{background:#fafafa;border-color:#dddde2;color:#202024;box-shadow:0 -8px 40px #0000000d}
+.bc-sheet p{color:#77777e}.bc-close{color:#74747c}.bc-primary{background:#252529;color:#fff}.bc-input{color:#727279}.bc-input input{color:#202024;border-color:#c7c7cd}.bc-amounts button{background:#ebebef;color:#3c3c43}.bc-amounts button.active{background:#252529;color:#fff}.bc-card-detail{background:#ededf0;color:#222228}.calm .bc-choice{border-color:#e1e1e6}
+.subscription-sheet{background:radial-gradient(ellipse at 50% 5%,#fff 0%,#f6f6f8 65%);border-color:#e1e1e5;color:#202024;box-shadow:0 -10px 45px #00000010}
+.subscription-grabber{background:#c7c7cd}.subscription-toolbar button{background:#eaeaec;color:#76767d}.subscription-toolbar .subscription-edit{color:#303037}
+.subscription-hero p{color:#7b7b83}.subscription-logo{box-shadow:0 4px 16px #0000000b}
+.subscription-facts{background:#fff;border-color:#e8e8ed}.subscription-fact{border-color:#eeeef1}.subscription-fact>span{color:#75757e}.subscription-fact small{color:#888890}
+.subscription-switch{background:#dddde2}.subscription-switch i{background:#fff;box-shadow:0 1px 3px #0002}.subscription-switch[aria-checked=true]{background:#303036}.subscription-switch[aria-checked=true] i{background:#fff}
+.subscription-payment{background:#fff;border-color:#e8e8ed;color:#75757e}.subscription-payment strong{color:#303037}
+.subscription-disable{background:#e9e9ee;color:#33333a}.subscription-management p,.subscription-off{color:#707079}.subscription-management>div button{background:#e6e6eb;color:#34343a}.subscription-management>div button:last-child{background:#28282e;color:#fff}
+
+.calm .calm-header{display:grid;grid-template-columns:34px 1fr 34px;align-items:center;padding:63px 22px 0;min-height:97px}.calm .calm-header h1{text-align:center;font-size:17px;font-weight:550;letter-spacing:-.3px;line-height:1.2}.calm .calm-header .wallet-back{width:34px;height:34px;padding:0;border-radius:50%;display:grid;place-items:center;background:#ececef;color:#34343b}.calm .bc-scroll{padding-top:21px}

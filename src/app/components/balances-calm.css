@@ -1,0 +1,42 @@
+.calm{background:#080808;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f5f5f5}
+.calm button{touch-action:manipulation}.calm button:focus-visible{outline:2px solid #aaa;outline-offset:-3px}
+.calm-header{display:flex;align-items:center;justify-content:space-between;padding:68px 25px 0;flex-shrink:0}
+.calm-header h1{font-size:29px;line-height:1.2;font-weight:620;letter-spacing:-1.2px}
+.calm-header>button{height:34px;width:34px;background:#222;border-radius:50%;display:grid;place-items:center;color:#ededed}
+.calm .bc-scroll{padding-top:23px;padding-bottom:24px}
+.calm-summary{display:flex;align-items:center;justify-content:space-between;width:calc(100% - 50px);margin:0 25px 29px;font-size:12px;color:#858585}
+.calm-summary>span:last-child{display:flex;align-items:center;gap:5px;color:#d4d4d4;font-size:13px}
+.calm-summary small{color:#858585;font-size:11px}
+.calm-cards{display:flex;gap:13px;padding:0 25px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory}
+.calm-card{flex:0 0 286px;height:178px;background:linear-gradient(115deg,#e8e8e8,#c9c9c9);color:#171717;border-radius:25px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;scroll-snap-align:center}
+.calm-card.secondary{background:linear-gradient(120deg,#363636,#222);color:#f3f3f3}
+.calm-card-top{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:550}
+.calm-contactless{font-size:14px;font-weight:400;letter-spacing:-2px;margin-left:auto;opacity:.5}
+.calm-card-bottom{display:flex;align-items:flex-end;justify-content:space-between}
+.calm-card strong{display:block;font-size:33px;font-weight:550;line-height:1.1;letter-spacing:-1px}
+.calm-card small{display:block;font-size:10px;margin-top:8px;opacity:.5}.calm-digits{font-size:11px;letter-spacing:1px;opacity:.45;padding-bottom:1px}
+.calm-card-caption{display:flex;justify-content:space-between;align-items:center;margin:15px 25px 37px;font-size:11px;color:#777}
+.calm-card-caption>span:last-child{display:flex;gap:5px}.calm-card-caption i{width:4px;height:4px;background:#ccc;border-radius:50%}.calm-card-caption i+i{background:#444}
+.calm-tabs{display:flex;gap:23px;align-items:center;margin:0 25px 12px}
+.calm-tabs button{font-size:21px;letter-spacing:-.5px;font-weight:550;color:#656565;padding:0 0 9px;border-bottom:2px solid transparent}
+.calm-tabs button[aria-selected=true]{color:#f6f6f6;border-color:#f6f6f6}
+.calm-tabs button span{font-size:12px;vertical-align:top;display:inline-block;margin-top:3px;margin-left:2px;color:#777}
+.calm-panel{margin:0 25px}.calm-row{display:flex;align-items:center;width:100%;min-height:75px;gap:14px;border-bottom:1px solid #202020}
+.calm-row:last-of-type{border-bottom:0}.calm-icon{display:grid;place-items:center;width:39px;height:39px;background:#1b1b1b;border-radius:14px;color:#bfbfbf;flex-shrink:0}
+.calm-name{flex:1;min-width:0}.calm-name b{display:block;font-size:14px;font-weight:450;letter-spacing:-.2px}.calm-name small{display:block;margin-top:5px;color:#858585;font-size:11px}
+.calm-value{font-size:16px;letter-spacing:-.35px;white-space:nowrap;color:#e3e3e3}
+.calm-total{display:flex;justify-content:space-between;align-items:center;width:100%;margin:3px 0 13px;font-size:11px;color:#777}.calm-total span{display:flex;align-items:center;gap:5px}
+.calm-sub{min-height:62px;padding:8px 0;gap:15px}.calm-sub .calm-name small{margin-top:2px}.calm-ring{height:43px;width:43px;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column}.calm-ring svg{position:absolute;inset:0;transform:rotate(-90deg);width:43px;height:43px}.calm-ring circle{fill:none;stroke:#303030;stroke-width:1.5}.calm-ring circle+circle{stroke:#ddd;stroke-linecap:round}.calm-ring b{font-size:14px;font-weight:450;line-height:1}.calm-ring small{font-size:8px;color:#999;margin-top:3px}
+.calm .bc-indicator{margin-top:6px;background:#eee}.calm .bc-sheet{background:#1b1b1b;border-color:#333}.calm .bc-choice{display:flex;justify-content:space-between}.calm .bc-sheet h3{margin-top:26px;font-size:15px}
+
+.calm-add-dock{flex-shrink:0;display:flex;justify-content:center;padding:12px 0 10px;background:#080808}.calm-add-dock button{display:flex;align-items:center;gap:7px;padding:12px 20px;border-radius:24px;background:#ededed;color:#181818;font-size:13px;font-weight:550;box-shadow:0 0 0 1px #ffffff12}
+
+.segmented .calm-tabs{display:flex;gap:3px;padding:4px;background:#202020;border-radius:12px;margin-bottom:14px}
+.segmented .calm-tabs button{flex:1;min-height:34px;padding:6px 8px;border:0;border-radius:9px;font-size:13px;font-weight:550;letter-spacing:0;text-align:center;color:#969696;transition:background .18s,color .18s}
+.segmented .calm-tabs button[aria-selected=true]{background:#454545;color:#fff;box-shadow:0 1px 4px #0004}
+.segmented .calm-tabs button span{font-size:11px;vertical-align:baseline;margin:0 0 0 3px;color:inherit;opacity:.65}
+.segmented .bc-scroll{min-height:0;padding-bottom:88px}
+.segmented .calm-add-dock{position:absolute;bottom:23px;left:0;right:0;padding:10px 25px 8px;background:transparent;pointer-events:none}
+.segmented .calm-add-dock button{pointer-events:auto;justify-content:center;width:126px;height:44px;padding:0;border-radius:23px;box-shadow:0 4px 22px #0008;transition:width .28s ease,border-radius .28s ease}
+.segmented .calm-add-dock.expanded button{width:100%;border-radius:14px}
+@media(prefers-reduced-motion:reduce){.segmented .calm-add-dock button,.segmented .calm-tabs button{transition:none}}
