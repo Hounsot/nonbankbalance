@@ -1,3 +1,5 @@
+import imgFrame2147227865 from "../../assets/payments/wallet-troika.svg?inline";
+import { serviceIcons } from "./service-icons";
 import { Radio } from "lucide-react";
 import { WalletQuickPayment, type WalletShortcut } from "./wallet-quick-payment";
 import type { WalletOverview } from "./payment-wallet-entries";
@@ -36,7 +38,7 @@ import imgBox20 from "../../assets/payments/f7607.svg?inline";
 import imgBox21 from "../../assets/payments/3fcdf.svg?inline";
 import imgBox22 from "../../assets/payments/996c6.svg?inline";
 
-export function PaymentsPaySection({overview,onWallet,shortcut,onLearn}:{overview:WalletOverview;shortcut:WalletShortcut;onLearn:(step?:number)=>void;onWallet:(tab?:'balances'|'subscriptions',card?:number,topup?:boolean,add?:ConnectionKind)=>void}) {
+export function PaymentsPaySection({overview,onWallet,shortcut,onLearn,horizontal}:{horizontal:boolean;overview:WalletOverview;shortcut:WalletShortcut;onLearn:(step?:number)=>void;onWallet:(tab?:'balances'|'subscriptions',card?:number,topup?:boolean,add?:ConnectionKind)=>void}) {
   const money=(value:number)=>value.toLocaleString('ru-RU')+' ₽';
   const activate=(action:()=>void)=>({role:'button',tabIndex:0,onClick:action,onKeyDown:(event:React.KeyboardEvent)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();action()}}});
 
@@ -177,100 +179,9 @@ export function PaymentsPaySection({overview,onWallet,shortcut,onLearn}:{overvie
             </div>
           </div>
           <div className="content-stretch flex flex-col gap-[var(--8,8px)] items-start relative shrink-0 w-full" data-node-id="40009188:56658">
-            <div className="content-start flex flex-wrap gap-[8px_8px] items-start pb-[var(--0,0px)] px-[var(--0,0px)] relative shrink-0 w-full" data-node-id="40009188:56500" data-name="Container">
-              <div className="bg-[var(--background\/secondary,#f2f3f7)] content-stretch flex w-[103px] flex-none flex-col justify-between h-[96px] items-start min-w-px p-[var(--12,12px)] relative rounded-[var(--20,20px)]" aria-label="Подписки" {...activate(()=>onWallet('subscriptions'))} data-node-id="40009188:56501"  data-name="Widget">
-                <div style={{order:1}} className="content-stretch flex flex-col gap-[var(--0,0px)] items-start justify-end p-[var(--0,0px)] relative shrink-0 w-full" data-node-id="40009188:56502" data-name=".Widget Text">
-                  <div className="content-stretch flex gap-[var(--4,4px)] items-center relative shrink-0 w-full" data-node-id="I40009188:56502;99193:16928" data-name="Row">
-                    <p className="[word-break:break-word] font-['MTS_Compact:Regular'] leading-[20px] not-italic overflow-hidden relative shrink-0 text-[14px] text-[color:var(--text\/primary,#1d2023)] text-ellipsis whitespace-nowrap" data-node-id="I40009188:56502;99193:16929">
-                      Подписки
-                    </p>
-                  </div>
-                </div>
-                <div className="content-stretch flex h-[32px] isolate items-baseline relative shrink-0" data-node-id="40009188:56503" data-name="Card/Emblem">{overview.subscriptionCount===0?<span style={{width:32,height:32,background:'white',borderRadius:10,display:'grid',placeItems:'center',color:'#8c959f'}}><Radio size={22}/></span>:<>
-                  <div className="content-stretch flex items-start mr-[-14px] relative shrink-0 z-[3]" data-node-id="I40009188:56503;6217:6599" data-name=".Emblem">
-                    <div className="overflow-clip relative rounded-[10px] shrink-0 size-[32px]" data-node-id="I40009188:56503;6217:6599;6217:6551" data-name="Container">
-                      <div className="absolute left-0 size-[32px] top-0" data-node-id="I40009188:56503;6217:6599;6217:6541" data-name="🔄Russia">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTinkoffBank} />
-                      </div>
-                    </div>
-                    <div className="absolute border border-[var(--constant\/greyscale-100,#f2f3f7)] border-solid inset-[-1px] rounded-[11px]" data-node-id="I40009188:56503;6217:6599;6217:6542" data-name="Stroke" />
-                  </div>
-                  <div className="content-stretch flex items-start mr-[-14px] relative shrink-0 z-[2]" data-node-id="I40009188:56503;6217:6600" data-name=".Emblem">
-                    <div className="overflow-clip relative rounded-[10px] shrink-0 size-[32px]" data-node-id="I40009188:56503;6217:6600;6217:6551" data-name="Container">
-                      <div className="absolute left-0 size-[32px] top-0" data-node-id="I40009188:56503;6217:6600;6217:6541" data-name="🔄Russia">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSberbank} />
-                      </div>
-                    </div>
-                    <div className="absolute border border-[var(--constant\/greyscale-100,#f2f3f7)] border-solid inset-[-1px] rounded-[11px]" data-node-id="I40009188:56503;6217:6600;6217:6542" data-name="Stroke" />
-                  </div>
-                  <div className="content-stretch flex items-start relative shrink-0 z-[1]" data-node-id="I40009188:56503;6217:6610" data-name=".Emblem">
-                    <div className="overflow-clip relative rounded-[10px] shrink-0 size-[32px]" data-node-id="I40009188:56503;6217:6610;6217:6551" data-name="Container">
-                      <div className="absolute left-0 size-[32px] top-0" data-node-id="I40009188:56503;6217:6610;6217:6541" data-name="🔄Russia">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgAlfaBank} />
-                      </div>
-                    </div>
-                    <div className="absolute border border-[var(--constant\/greyscale-100,#f2f3f7)] border-solid inset-[-1px] rounded-[11px]" data-node-id="I40009188:56503;6217:6610;6217:6542" data-name="Stroke" />
-                  </div>
-                </>}</div>
-              </div>
-              <div className="bg-[var(--background\/secondary,#f2f3f7)] content-stretch flex flex-col h-[96px] items-start justify-between p-[var(--12,12px)] relative rounded-[var(--20,20px)] min-w-0 flex-1 shrink-0" aria-label="Внешние балансы" {...activate(()=>onWallet('balances'))} data-node-id="40009188:56505"  data-name="Widget">
-                <div style={{order:1}} className="content-stretch flex flex-row gap-[4px] items-center justify-between p-[var(--0,0px)] relative shrink-0 w-full" data-node-id="40009188:56506" data-name=".Widget Text">
-                  <div className="content-stretch flex gap-[var(--4,4px)] items-center relative shrink-0" data-node-id="I40009188:56506;99193:16928" data-name="Row">
-                    <p className="[word-break:break-word] font-['MTS_Compact:Regular'] leading-[20px] not-italic overflow-hidden relative shrink-0 text-[14px] text-[color:var(--text\/primary,#1d2023)] text-ellipsis whitespace-nowrap" data-node-id="I40009188:56506;99193:16929">
-                      Внешние балансы
-                    </p>
-                  </div>
-                  <p className="[word-break:break-word] font-['MTS_Compact:Medium'] leading-[20px] not-italic overflow-hidden relative shrink-0 text-[17px] text-[color:var(--text\/primary,#1d2023)] text-ellipsis whitespace-nowrap" data-node-id="I40009188:56506;99193:16931">
-                      {money(overview.balanceTotal)}
-                    </p>
-                </div>
-                <div className="content-stretch flex isolate items-start relative shrink-0" data-node-id="40009188:56507">
-                  <div className="bg-[var(--icon-on-background,white)] border-2 border-[#f2f3f7] border-solid mr-[-8px] overflow-clip relative rounded-[10px] shrink-0 size-[32px] z-[4]" data-node-id="40009188:56508" data-name="Card/Icon on Background">
-                    <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex gap-[var(--0,0px)] items-center justify-center left-1/2 overflow-clip p-[var(--0,0px)] size-[24px] top-1/2" data-node-id="I40009188:56508;11582:41373" data-name="Size=24, Style=Fill">
-                      <div className="relative shrink-0 size-[24px]" data-node-id="I40009188:56508;11582:41373;552:206153" data-name="Box">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgBox5} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[var(--icon-on-background,white)] border-2 border-[#f2f3f7] border-solid mr-[-8px] overflow-clip relative rounded-[10px] shrink-0 size-[32px] z-[3]" data-node-id="40009188:56509" data-name="Card/Icon on Background">
-                    <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex items-center justify-center left-1/2 overflow-clip top-1/2" data-node-id="I40009188:56509;11582:41373" data-name="Size=24, Style=Fill">
-                      <div className="flex items-center justify-center relative shrink-0" data-node-id="I40009188:56509;11582:41373;6260:6766">
-                        <div className="-scale-y-100 flex-none rotate-180">
-                          <div className="relative size-[24px]" data-name="Box">
-                            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgBox2} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[var(--icon-on-background,white)] border-2 border-[#f2f3f7] border-solid mr-[-8px] overflow-clip relative rounded-[10px] shrink-0 size-[32px] z-[2]" data-node-id="40009188:56510" data-name="Card/Icon on Background">
-                    <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex gap-[var(--0,0px)] items-center justify-center left-1/2 overflow-clip p-[var(--0,0px)] size-[24px] top-1/2" data-node-id="I40009188:56510;11582:41373" data-name="Size=24, Style=Fill">
-                      <div className="relative shrink-0 size-[24px]" data-node-id="I40009188:56510;11582:41373;9678:312008" data-name="Box">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgBox6} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[var(--icon-on-background,white)] border-2 border-[#f2f3f7] border-solid overflow-clip relative rounded-[10px] shrink-0 size-[32px] z-[1]" data-node-id="40009188:56511" data-name="Card/Icon on Background">
-                    <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex gap-[var(--0,0px)] items-center justify-center left-1/2 overflow-clip p-[var(--0,0px)] size-[24px] top-1/2" data-node-id="I40009188:56511;11582:41373" data-name="Size=24, Style=Fill">
-                      <div className="relative shrink-0 size-[24px]" data-node-id="I40009188:56511;11582:41373;547:206551" data-name="Box">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgBox7} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="absolute bg-[var(--background\/secondary-elevated,white)] content-stretch flex flex-col h-[16px] items-center justify-center right-[12px] px-[4px] rounded-[10px] top-[12px]" style={{display:overview.balanceCount?undefined:"none"}} data-node-id="40009188:56513" data-name="Count Indicator">
-                  <div className="h-px relative shrink-0 w-[8px]" data-node-id="I40009188:56513;156047:166470" data-name="Spacing" />
-                  <div className="content-stretch flex flex-col items-center justify-center relative shrink-0" data-node-id="I40009188:56513;156047:166471" data-name="Box">
-                    <div className="[word-break:break-word] flex flex-col font-['MTS_Compact:Medium'] justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-[color:var(--text\/primary,#1d2023)] text-center whitespace-nowrap" data-node-id="I40009188:56513;156047:166472">
-                      <p className="leading-[16px]">{overview.balanceCount}</p>
-                    </div>
-                  </div>
-                  <div className="h-px relative shrink-0 w-[8px]" data-node-id="I40009188:56513;156047:166473" data-name="Spacing" />
-                </div>
-              </div>
-            </div>
-            <WalletQuickPayment choice={shortcut} overview={overview} onOpen={onWallet}/>
-            {overview.balanceCount===0&&overview.subscriptionCount===0&&<button className="pay-wallet-learn" onClick={()=>onLearn(0)}>Как работает кошелёк</button>}
+            <div className={horizontal?"payment-entry-layout horizontal":"payment-entry-layout"}><WalletQuickPayment choice={shortcut} overview={overview} onOpen={onWallet}/>
+            <button className="separate-service" onClick={()=>onWallet('balances')}><span className="separate-icon"><img src={imgFrame2147227865} width={52} height={36} alt=""/></span><span><strong>Внешние балансы</strong><small>Карты, связь и другие счета</small></span><span className="separate-chevron">›</span></button></div>
+            {overview.balanceCount===0&&<button className="pay-wallet-learn" onClick={()=>onLearn(0)}>Как работает кошелёк</button>}
           </div>
         </div>
         <div className="content-stretch flex flex-col items-start pt-[var(--8,8px)] relative rounded-[var(--radius\/16,16px)] shrink-0 w-full" data-node-id="40009188:56081" data-name="Payments cells">

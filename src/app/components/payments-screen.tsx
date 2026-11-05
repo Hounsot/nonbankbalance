@@ -1,3 +1,4 @@
+import troikaTemplate from "../../assets/payments/wallet-troika.svg?inline";
 import type { WalletShortcut } from "./wallet-quick-payment";
 import { PaymentsPaySection } from "./payments-pay-section";
 import type { ConnectionKind } from "./wallet-empty";
@@ -35,7 +36,7 @@ import imgBox10 from "../../assets/payments/3fcdf.svg?inline";
 import imgBox11 from "../../assets/payments/df4de.svg?inline";
 import imgBox12 from "../../assets/payments/2e7c1.svg?inline";
 
-export function PaymentsScreen({onWallet,overview,shortcut,onLearn}:{shortcut:WalletShortcut;onLearn:(step?:number)=>void;onWallet:(tab?:'balances'|'subscriptions',card?:number,topup?:boolean,add?:ConnectionKind,subscription?:number)=>void;overview:WalletOverview}) {
+export function PaymentsScreen({onWallet,overview,shortcut,onLearn,horizontal}:{horizontal:boolean;shortcut:WalletShortcut;onLearn:(step?:number)=>void;onWallet:(tab?:'balances'|'subscriptions',card?:number,topup?:boolean,add?:ConnectionKind,subscription?:number)=>void;overview:WalletOverview}) {
  const searchRef=useRef<HTMLInputElement>(null);
   return (
     <div className="payments-screen"><div className="payments-scroll"><div className="bg-[var(--background\/lower,#f2f3f7)] border border-[var(--background\/stroke,rgba(188,195,208,0.5))] border-solid content-stretch flex flex-col gap-[12px] isolate items-start relative size-full" data-node-id="40002004:4934" data-name="Main Full">
@@ -204,6 +205,7 @@ export function PaymentsScreen({onWallet,overview,shortcut,onLearn}:{shortcut:Wa
                   </div>
                 </div>
               </div>
+              {overview.hasTroika&&<button style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4,flexShrink:0}} onClick={()=>onWallet('balances',0)}><img src={troikaTemplate} width={52} height={36} alt="" style={{height:52,objectFit:'contain'}}/><span style={{fontFamily:'MTS Compact, Arial, sans-serif',fontSize:12,lineHeight:'16px',fontWeight:400,textAlign:'center',width:52}}>Тройка</span><span style={{fontFamily:'MTS Compact, Arial, sans-serif',fontSize:11,lineHeight:'16px',fontWeight:400,color:'#626c77'}}>{overview.troika.toLocaleString('ru-RU')} ₽</span></button>}
               <div className="content-stretch flex flex-col gap-[var(--4,4px)] items-center relative shrink-0" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009" data-name="Icon Button Set Item Custom" role="button" tabIndex={0} aria-label="Мой телефон — открыть кошелёк" onClick={()=>onWallet('balances')} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onWallet()}}}>
                 <div className="content-stretch flex gap-[10px] items-start overflow-clip relative rounded-[16px] shrink-0" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009;40002043:4015" data-name="Item/Emblem w Stroke">
                   <div className="relative shrink-0 size-[52px]" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009;40002043:4015;6695:12058" data-name="🔄Russia">
@@ -212,7 +214,7 @@ export function PaymentsScreen({onWallet,overview,shortcut,onLearn}:{shortcut:Wa
                 </div>
                 <p className="[word-break:break-word] font-['MTS_Compact:Regular'] leading-[16px] not-italic overflow-hidden relative shrink-0 text-[12px] text-[color:var(--text\/primary,#1d2023)] text-center text-ellipsis w-[52px]" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009;40002043:4016">
                   Мой телефон
-                </p>
+                </p>{overview.phoneBalance!==undefined&&<span style={{fontFamily:'MTS Compact, Arial, sans-serif',fontSize:11,lineHeight:'16px',fontWeight:400,color:'#626c77',whiteSpace:'nowrap'}}>{overview.phoneBalance.toLocaleString('ru-RU')} ₽</span>}
                 <div className="absolute bg-[var(--constant\/dark-blueberry,#007cff)] content-stretch flex flex-col items-center justify-center left-[38px] p-[var(--2,2px)] rounded-[10px] top-[-6px]" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009;40002043:4017" data-name=".Top Indicator">
                   <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009;40002043:4017;6695:12352" data-name="Size=16, Style=Outline">
                     <div className="relative shrink-0 size-[16px]" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009;40002043:4017;6695:12352;547:208154" data-name="Box">
@@ -398,7 +400,7 @@ export function PaymentsScreen({onWallet,overview,shortcut,onLearn}:{shortcut:Wa
           </div>
         </div>
       </div>
-      <PaymentsPaySection overview={overview} onWallet={onWallet} shortcut={shortcut} onLearn={onLearn}/>
+      <PaymentsPaySection horizontal={horizontal} overview={overview} onWallet={onWallet} shortcut={shortcut} onLearn={onLearn}/>
     </div></div></div>
   );
 }
