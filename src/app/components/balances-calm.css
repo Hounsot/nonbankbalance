@@ -40,3 +40,5 @@
 .segmented .calm-add-dock button{pointer-events:auto;justify-content:center;width:126px;height:44px;padding:0;border-radius:23px;box-shadow:0 4px 22px #0008;transition:width .28s ease,border-radius .28s ease}
 .segmented .calm-add-dock.expanded button{width:100%;border-radius:14px}
 @media(prefers-reduced-motion:reduce){.segmented .calm-add-dock button,.segmented .calm-tabs button{transition:none}}
+
+.calm .calm-value.is-negative,.calm-attention .is-negative{color:#dc4545}.calm-attention{margin:18px 25px 14px}.calm-attention h2{font-size:13px;font-weight:500;color:#74747d;margin:0 0 8px}.calm-attention button{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;background:#fff;border:1px solid #ededf0;border-radius:15px;margin-top:6px}.calm-attention button>span{flex:1;min-width:0}.calm-attention b,.calm-attention small{display:block}.calm-attention b{font-size:13px;font-weight:500}.calm-attention small{font-size:11px;color:#76767e;margin-top:3px}.calm-attention strong{font-size:13px;font-weight:500}.calm-attention svg{color:#94949d}

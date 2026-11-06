@@ -1,7 +1,7 @@
 import imgFrame2147227865 from "../../assets/payments/wallet-troika.svg?inline";
 import { serviceIcons } from "./service-icons";
 import { Radio } from "lucide-react";
-import { WalletQuickPayment, type WalletShortcut } from "./wallet-quick-payment";
+import type { WalletShortcut } from "./wallet-quick-payment";
 import type { WalletOverview } from "./payment-wallet-entries";
 import type { ConnectionKind } from "./wallet-empty";
 import "./payments-pay-section.css";
@@ -179,8 +179,9 @@ export function PaymentsPaySection({overview,onWallet,shortcut,onLearn,horizonta
             </div>
           </div>
           <div className="content-stretch flex flex-col gap-[var(--8,8px)] items-start relative shrink-0 w-full" data-node-id="40009188:56658">
-            <div className={horizontal?"payment-entry-layout horizontal":"payment-entry-layout"}><WalletQuickPayment choice={shortcut} overview={overview} onOpen={onWallet}/>
-            <button className="separate-service" onClick={()=>onWallet('balances')}><span className="separate-icon"><img src={imgFrame2147227865} width={52} height={36} alt=""/></span><span><strong>Внешние балансы</strong><small>Карты, связь и другие счета</small></span><span className="separate-chevron">›</span></button></div>
+            <div className="payment-entry-layout">
+              <button className="separate-service" onClick={()=>onWallet('balances')}><span className="separate-icon balance-preview" aria-hidden="true"><span className="balance-preview-track">{[imgFrame2147227865,imgFrame2147227865,imgFrame2147227865,imgFrame2147227865,imgFrame2147227865].map((src,i)=><img key={i} src={src} width={52} height={36} alt=""/>)}</span></span><span><strong>Внешние балансы</strong><small>Карты, связь и другие счета</small></span><span className="separate-chevron">›</span>{!!overview.attentionCount&&<span className="balance-attention-badge" aria-label={`${overview.attentionCount} требуют внимания`}>{overview.attentionCount}</span>}</button>
+            </div>
             {overview.balanceCount===0&&<button className="pay-wallet-learn" onClick={()=>onLearn(0)}>Как работает кошелёк</button>}
           </div>
         </div>

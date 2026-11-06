@@ -6,7 +6,7 @@ import sber from '../../assets/payments/wallet-sber.svg?inline';
 import alfa from '../../assets/payments/wallet-alfa.svg?inline';
 import troika from '../../assets/payments/wallet-troika.svg?inline';
 import './payment-wallet-entries.css';
-export type WalletOverview={phoneBalance?:number;quickBalances?:Partial<Record<'troika'|'social'|'parking',number>>;troika:number;subscriptionTotal:number;cards:number[];subscriptionCount:number;balanceTotal:number;balanceCount:number;hasTroika:boolean;debt:number;nextSubscription?:{index:number;name:string;price:number;date:string;icon:string}};
+export type WalletOverview={attentionCount?:number;phoneBalance?:number;quickBalances?:Partial<Record<'troika'|'social'|'parking',number>>;troika:number;subscriptionTotal:number;cards:number[];subscriptionCount:number;balanceTotal:number;balanceCount:number;hasTroika:boolean;debt:number;nextSubscription?:{index:number;name:string;price:number;date:string;icon:string}};
 const money=(n:number)=>n.toLocaleString('ru-RU')+' ₽';
 const emblems=[{name:'Т-Банк',src:tbank},{name:'Сбербанк',src:sber},{name:'Альфа-Банк',src:alfa}];
 function Emblems(){return <span className="payment-wallet-logos" aria-hidden="true">{emblems.map((item,i)=><span className="payment-wallet-emblem" style={{zIndex:3-i}} key={item.name}><img src={item.src} alt="" width={32} height={32}/></span>)}</span>}
