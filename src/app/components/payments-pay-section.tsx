@@ -1,6 +1,5 @@
-import imgFrame2147227865 from "../../assets/payments/wallet-troika.svg?inline";
-import { serviceIcons } from "./service-icons";
-import { Radio } from "lucide-react";
+import walletParking from "../../assets/payments/9a3ec.png?inline";
+import walletWifi from "../../assets/payments/d0ff1.svg?inline";
 import type { WalletShortcut } from "./wallet-quick-payment";
 import type { WalletOverview } from "./payment-wallet-entries";
 import type { ConnectionKind } from "./wallet-empty";
@@ -16,9 +15,6 @@ import imgBox3 from "../../assets/payments/0c88c.svg?inline";
 import imgBox4 from "../../assets/payments/df4de.svg?inline";
 import imgSpotify from "../../assets/payments/ab364.svg?inline";
 import imgSpotify1 from "../../assets/payments/9385f.svg?inline";
-import imgTinkoffBank from "../../assets/payments/e63f7.svg?inline";
-import imgSberbank from "../../assets/payments/344e3.svg?inline";
-import imgAlfaBank from "../../assets/payments/b5dde.svg?inline";
 import imgBox5 from "../../assets/payments/c7ea2.svg?inline";
 import imgBox6 from "../../assets/payments/c7be6.svg?inline";
 import imgBox7 from "../../assets/payments/a7999.svg?inline";
@@ -179,9 +175,22 @@ export function PaymentsPaySection({overview,onWallet,shortcut,onLearn,horizonta
             </div>
           </div>
           <div className="content-stretch flex flex-col gap-[var(--8,8px)] items-start relative shrink-0 w-full" data-node-id="40009188:56658">
-            <div className="payment-entry-layout">
-              <button className="separate-service" onClick={()=>onWallet('balances')}><span className="separate-icon balance-preview" aria-hidden="true"><span className="balance-preview-track">{[imgFrame2147227865,imgFrame2147227865,imgFrame2147227865,imgFrame2147227865,imgFrame2147227865].map((src,i)=><img key={i} src={src} width={52} height={36} alt=""/>)}</span></span><span><strong>Внешние балансы</strong><small>Карты, связь и другие счета</small></span><span className="separate-chevron">›</span>{!!overview.attentionCount&&<span className="balance-attention-badge" aria-label={`${overview.attentionCount} требуют внимания`}>{overview.attentionCount}</span>}</button>
-            </div>
+            <button type="button" className="payments-wallet-balances" onClick={() => onWallet("balances")}>
+              <span className="payments-wallet-emblems" aria-hidden="true">
+                <span className="payments-wallet-emblem payments-wallet-emblem-white" style={{ zIndex: 3 }}><img src={imgBox2} alt="" /></span>
+                <span className="payments-wallet-emblem" style={{ zIndex: 2 }}><img src={walletParking} alt="" width={32} height={32} /></span>
+                <span className="payments-wallet-emblem payments-wallet-emblem-white"><img src={walletWifi} alt="" /></span>
+              </span>
+              <span>
+                <strong>Внешние балансы <small>{overview.balanceCount || null}</small></strong>
+                Карты, интернет, связь и парковки
+              </span>
+              {Boolean(overview.attentionCount) && (
+                <span className="balance-attention-badge" aria-label={overview.attentionCount === 1 ? "Один счёт требует внимания" : `${overview.attentionCount} счёта требуют внимания`}>
+                  {overview.attentionCount}
+                </span>
+              )}
+            </button>
             {overview.balanceCount===0&&<button className="pay-wallet-learn" onClick={()=>onLearn(0)}>Как работает кошелёк</button>}
           </div>
         </div>

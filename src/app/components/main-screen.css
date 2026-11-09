@@ -1,0 +1,91 @@
+.home-screen {
+  position: relative;
+  height: 100%;
+  color: #1d2023;
+  background: white;
+  font-family: "MTS Compact", Arial, sans-serif;
+}
+
+.home-screen [class*="MTS_Compact"] { font-family: "MTS Compact", Arial, sans-serif; }
+.home-screen [class*="MTS_Wide"] { font-family: "MTS Wide", Arial, sans-serif; }
+.home-screen [class*="MTS_Compact:Medium"] { font-weight: 500; }
+
+.home-scroll {
+  position: relative;
+  isolation: isolate;
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: none;
+  padding-bottom: 82px;
+}
+
+.home-background {
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.home-summary-stack {
+  background-size: 100% 104px;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  border-radius: 32px 32px 0 0;
+}
+
+.home-account-stack {
+  position: relative;
+  background: linear-gradient(to bottom, transparent 32px, white 32px);
+}
+
+.home-products {
+  position: relative;
+  border-radius: 32px 32px 0 0;
+  overflow: hidden;
+  background: #f2f3f7;
+}
+
+.home-screen button:focus-visible {
+  outline: 2px solid #8f8fff;
+  outline-offset: -2px;
+}
+
+.home-promo-strip { padding: 8px 20px; }
+
+.home-promo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  height: 124px;
+  padding: 26px 20px;
+  border-radius: 20px;
+  background: linear-gradient(125deg, #4f5d83, #b6c1d4);
+  color: white;
+}
+
+.home-promo p { max-width: 58%; font-size: 17px; line-height: 20px; font-weight: 500; }
+.home-promo small { display: block; margin-top: 4px; font-size: 14px; }
+.home-promo img { position: absolute; z-index: -1; right: 0; bottom: 0; width: 42%; }
+
+.home-balance-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  padding-inline: 4px;
+  border-radius: 8px;
+  background: #ff0032;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.home-balance-badge > span {
+  transform: translateY(1px);
+}

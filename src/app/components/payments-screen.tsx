@@ -7,12 +7,6 @@ import { useRef } from "react";
 import searchButton from "../../assets/payments/search-button.png?inline";
 import "./payments-screen.css";
 
-import imgLayout from "../../assets/payments/e1191.svg?inline";
-import imgColor from "../../assets/payments/b042d.svg?inline";
-import imgLayout1 from "../../assets/payments/183dd.svg?inline";
-import imgLayout2 from "../../assets/payments/774cb.svg?inline";
-import imgLayout3 from "../../assets/payments/1e2f3.svg?inline";
-import imgLayout4 from "../../assets/payments/9c4da.svg?inline";
 import imgBox from "../../assets/payments/aef2c.svg?inline";
 import imgNetworkWifi3Bar24DpE3E3E3Fill0Wght400Grad0Opsz24 from "../../assets/payments/fbd01.svg?inline";
 import imgNetworkCell24DpE3E3E3Fill0Wght400Grad0Opsz24 from "../../assets/payments/b8182.svg?inline";
@@ -40,87 +34,6 @@ export function PaymentsScreen({onWallet,overview,shortcut,onLearn,horizontal}:{
  const searchRef=useRef<HTMLInputElement>(null);
   return (
     <div className="payments-screen"><div className="payments-scroll"><div className="bg-[var(--background\/lower,#f2f3f7)] border border-[var(--background\/stroke,rgba(188,195,208,0.5))] border-solid content-stretch flex flex-col gap-[12px] isolate items-start relative size-full" data-node-id="40002004:4934" data-name="Main Full">
-      <div className="absolute backdrop-blur-[20px] bg-[var(--background\/bar,rgba(255,255,255,0.88))] bottom-[-1px] content-stretch flex flex-col items-center justify-end left-[-1px] w-full z-[4]" data-node-id="40002022:3230" data-name="Tab Bar 2.0 Advanced">
-        <div className="h-[52px] relative shrink-0 w-full" data-node-id="I40002022:3230;91327:13297" data-name="Layout">
-          <div className="absolute content-stretch flex items-center justify-center left-0 px-[var(--4,4px)] right-0 top-0" data-node-id="I40002022:3230;91327:13298" data-name="Tabs">
-            <div className="content-stretch flex flex-[1_0_0] flex-col h-[52px] items-center justify-center min-w-px relative" data-node-id="I40002022:3230;91327:13299" data-name="Tab 1">
-              <div className="content-stretch flex flex-col gap-[4px] items-center justify-center overflow-clip relative shrink-0 w-full" data-node-id="I40002022:3230;91327:13299;96978:5347" data-name="Layout">
-                <div className="relative shrink-0 size-[24px]" data-node-id="I40002022:3230;91327:13299;96978:5348" data-name="Layout">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgLayout} />
-                </div>
-                <p className="[word-break:break-word] font-['MTS_Compact:Regular'] leading-[16px] min-w-full not-italic overflow-hidden relative shrink-0 text-[10px] text-[color:var(--text\/inactive-tabbar,#6e7782)] text-center text-ellipsis w-[min-content] whitespace-nowrap" data-node-id="I40002022:3230;91327:13299;96978:5351">
-                  Главная
-                </p>
-              </div>
-            </div>
-            <div className="content-stretch flex flex-[1_0_0] flex-col h-[52px] items-center justify-center min-w-px relative" data-node-id="I40002022:3230;91327:13300" data-name="Tab 2">
-              <div className="content-stretch flex flex-col gap-[4px] items-center justify-center overflow-clip relative shrink-0 w-full" data-node-id="I40002022:3230;91327:13300;99326:322770" data-name="Layout">
-                <div className="relative shrink-0 size-[24px]" data-node-id="I40002022:3230;91327:13300;99326:322771" data-name="Layout">
-                  <div className="absolute h-[19px] left-[3px] top-[3px] w-[17.396px]" data-node-id="I40002022:3230;91327:13300;99326:322772" data-name="Color">
-                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgColor} />
-                  </div>
-                  <div className="absolute content-stretch flex flex-col items-start left-[16px] p-px rounded-[100px] top-0" data-node-id="I40002022:3230;91327:13300;99326:322776" data-name="Counter">
-                    <div className="bg-[var(--accent\/notification,#ff0032)] content-stretch flex flex-col h-[16px] items-center justify-center px-[4px] relative rounded-[10px] shrink-0" data-node-id="I40002022:3230;91327:13300;99326:322777" data-name="Count Indicator">
-                      <div className="h-px relative shrink-0 w-[8px]" data-node-id="I40002022:3230;91327:13300;99326:322777;99326:322857" data-name="Spacing" />
-                      <div className="content-stretch flex flex-col items-center justify-center relative shrink-0" data-node-id="I40002022:3230;91327:13300;99326:322777;99326:322858" data-name="Box">
-                        <div className="[word-break:break-word] flex flex-col font-['MTS_Compact:Medium'] justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-[color:var(--constant\/greyscale-0,white)] text-center whitespace-nowrap" data-node-id="I40002022:3230;91327:13300;99326:322777;99326:322859">
-                          <p className="leading-[16px]">3</p>
-                        </div>
-                      </div>
-                      <div className="h-px relative shrink-0 w-[8px]" data-node-id="I40002022:3230;91327:13300;99326:322777;99326:322860" data-name="Spacing" />
-                    </div>
-                  </div>
-                </div>
-                <p className="[word-break:break-word] font-['MTS_Compact:Medium'] leading-[16px] min-w-full not-italic relative shrink-0 text-[12px] text-[color:var(--controls\/active-tabbar,#8f8fff)] text-center w-[min-content]" data-node-id="I40002022:3230;91327:13300;99326:322778">
-                  Платежи
-                </p>
-              </div>
-            </div>
-            <div className="content-stretch flex flex-[1_0_0] flex-col h-[52px] items-center justify-center min-w-px relative" data-node-id="I40002022:3230;91327:13301" data-name="Tab 3">
-              <div className="content-stretch flex flex-col gap-[4px] items-center justify-center overflow-clip relative shrink-0 w-full" data-node-id="I40002022:3230;91327:13301;96978:5347" data-name="Layout">
-                <div className="relative shrink-0 size-[24px]" data-node-id="I40002022:3230;91327:13301;96978:5348" data-name="Layout">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgLayout1} />
-                </div>
-                <p className="[word-break:break-word] font-['MTS_Compact:Regular'] leading-[16px] min-w-full not-italic overflow-hidden relative shrink-0 text-[10px] text-[color:var(--text\/inactive-tabbar,#6e7782)] text-center text-ellipsis w-[min-content] whitespace-nowrap" data-node-id="I40002022:3230;91327:13301;96978:5351">
-                  История
-                </p>
-              </div>
-            </div>
-            <div className="content-stretch flex flex-[1_0_0] flex-col h-[52px] items-center justify-center min-w-px relative" data-node-id="I40002022:3230;91327:13302" data-name="Tab 4">
-              <div className="content-stretch flex flex-col gap-[4px] items-center justify-center overflow-clip relative shrink-0 w-full" data-node-id="I40002022:3230;91327:13302;96978:5347" data-name="Layout">
-                <div className="relative shrink-0 size-[24px]" data-node-id="I40002022:3230;91327:13302;96978:5348" data-name="Layout">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgLayout2} />
-                </div>
-                <p className="[word-break:break-word] font-['MTS_Compact:Regular'] leading-[16px] min-w-full not-italic overflow-hidden relative shrink-0 text-[10px] text-[color:var(--text\/inactive-tabbar,#6e7782)] text-center text-ellipsis w-[min-content] whitespace-nowrap" data-node-id="I40002022:3230;91327:13302;96978:5351">
-                  Витрина
-                </p>
-              </div>
-            </div>
-            <div className="content-stretch flex flex-[1_0_0] flex-col h-[52px] items-center justify-center min-w-px relative" data-node-id="I40002022:3230;91327:13303" data-name="Tab 5">
-              <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-full" data-node-id="I40002022:3230;91327:13303;96978:5347" data-name="Layout">
-                <div className="relative shrink-0 size-[24px]" data-node-id="I40002022:3230;91327:13303;96978:5348" data-name="Layout">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgLayout3} />
-                </div>
-                <p className="[word-break:break-word] font-['MTS_Compact:Regular'] leading-[16px] min-w-full not-italic overflow-hidden relative shrink-0 text-[10px] text-[color:var(--text\/inactive-tabbar,#6e7782)] text-center text-ellipsis w-[min-content] whitespace-nowrap" data-node-id="I40002022:3230;91327:13303;96978:5351">
-                  Инвестиции
-                </p>
-              </div>
-            </div>
-            <div className="content-stretch flex flex-[1_0_0] flex-col h-[52px] items-center justify-center min-w-px relative" data-node-id="I40002022:3230;91327:13343" data-name="Tab 6">
-              <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-full" data-node-id="I40002022:3230;91327:13343;96978:5347" data-name="Layout">
-                <div className="relative shrink-0 size-[24px]" data-node-id="I40002022:3230;91327:13343;96978:5348" data-name="Layout">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgLayout4} />
-                </div>
-                <p className="[word-break:break-word] font-['MTS_Compact:Regular'] leading-[16px] min-w-full not-italic overflow-hidden relative shrink-0 text-[10px] text-[color:var(--text\/inactive-tabbar,#6e7782)] text-center text-ellipsis w-[min-content] whitespace-nowrap" data-node-id="I40002022:3230;91327:13343;96978:5351">
-                  Ещё
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="absolute bg-[var(--background\/stroke,rgba(188,195,208,0.5))] h-[0.5px] left-0 right-0 top-0" data-node-id="I40002022:3230;91327:13304" data-name="Separator" />
-        </div>
-        <div className="payments-system-space" aria-hidden="true" />
-      </div>
       <div className="content-stretch flex flex-col items-start relative shrink-0 z-[3]" data-node-id="40002151:23297" data-name="Navbar + card content">
         <div className="bg-[var(--background\/primary-elevated,white)] content-stretch flex flex-col items-end overflow-clip relative shrink-0 w-full" data-node-id="40002151:23298" data-name="Navbar 2.0.1">
           <div className="content-stretch flex h-[44px] items-center justify-between max-h-[44px] min-h-[44px] pb-[8px] pt-[12px] px-[24px] relative shrink-0 w-full" data-node-id="I40002151:23298;91207:220222" data-name="Status Bar">

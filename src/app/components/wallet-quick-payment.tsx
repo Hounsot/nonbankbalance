@@ -8,7 +8,7 @@ export type WalletShortcut='troika'|'social'|'parking';
 export const walletShortcuts=[
  {id:'troika' as const,name:'Тройка',number:'·· 7731',index:0,kind:'card' as const},
  {id:'social' as const,name:'Социальная карта',number:'·· 0842',index:1,kind:'card' as const},
- {id:'parking' as const,name:'Парковки Москвы',number:'А 777 ВС 77',index:4,kind:'balance' as const},
+ {id:'parking' as const,name:'Парковки Москвы',number:'А 777 ВС 77',index:4,kind:'parking' as const},
 ];
 export function ShortcutIcon({choice}:{choice:WalletShortcut}){return choice==='troika'?<img src={troika} width={52} height={36} alt=""/>:choice==='social'?<span className="wq-social"><CreditCard size={25}/></span>:<span className="wq-parking"><ParkingCircle size={30}/></span>}
 export function WalletQuickPayment({choice,overview,onOpen}:{choice:WalletShortcut;overview:WalletOverview;onOpen:(tab?:'balances'|'subscriptions',card?:number,topup?:boolean,add?:ConnectionKind)=>void}){

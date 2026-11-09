@@ -19,10 +19,10 @@ export function PhoneFrame({ children, label, showStatus=true }: { children: Rea
               "inset 0 0 0 2px #e1e1e5, inset 0 0 0 3px rgba(255,255,255,0.05)",
           }}
         >
-          {showStatus&&<div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-8 pt-3.5 text-[#202024]">
+          {showStatus&&<div className="absolute top-0 left-0 right-0 z-30 grid grid-cols-[1fr_auto_1fr] items-center px-8 pt-3.5 text-[#202024]">
             <span style={{ fontSize: "15px", fontWeight: 600, letterSpacing: "-0.01em" }}>9:41</span>
             <div className="w-[108px] h-[33px] rounded-full" style={{ background: "#000" }} />
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center justify-self-end gap-1.5">
               <svg width="17" height="11" viewBox="0 0 17 11" fill="none">
                 <path d="M1 7.5L1 9.5M4.5 5.5L4.5 9.5M8 3.5L8 9.5M11.5 1.5L11.5 9.5" stroke="#202024" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>

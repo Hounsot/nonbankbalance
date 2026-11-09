@@ -5,3 +5,5 @@
 .payment-wallet-empty-symbol{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#e5e7f0;color:#8b8fa4;flex-shrink:0}.we-widget-transport .we-transport-description{min-width:0;flex:1}.we-widget-transport .payment-wallet-topup{flex-shrink:0;margin-left:auto}.we-widget-transport b{font-size:13px}.we-widget-transport small{font-size:9px;line-height:13px}
 
 .we-manual{display:flex;flex-direction:column;gap:14px;margin-top:20px}.we-manual label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:#686870}.we-manual input{background:#f0f0f2;border:0;border-radius:12px;padding:12px;color:#202024;font-size:15px}.we-manual button{background:#202024;color:white;border-radius:14px;padding:15px;text-align:center;font-weight:600}.we-manual button:disabled{opacity:.4}
+
+.we-manual .we-back { background: transparent; color: #626c77; padding: 4px; }
