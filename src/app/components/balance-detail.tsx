@@ -1,3 +1,4 @@
+import type { AutoMode, DetailScreen } from "../prototype-route";
 import { AutoTopup } from './auto-topup';
 import { balanceLogos } from './balance-logos';
 import { useId, useState } from 'react';
@@ -58,18 +59,23 @@ function TroikaAnalytics({ balance }: { balance: number }) {
  );
 }
 
-export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onClose,onHide,pinned=false,onTogglePin,startTopup=false,accountNote,serviceIndex=index}:{accountNote?:string;serviceIndex?:number;index:number;name:string;value:number;settings:BalanceSettings;onSettings:(s:BalanceSettings)=>void;onTopup:(amount:number)=>void;onClose:()=>void;onHide:()=>void;pinned?:boolean;onTogglePin?:()=>void;startTopup?:boolean}){
- const [screen,setScreen]=useState<'detail'|'topup'|'auto'|'notify'>(startTopup?'topup':'detail');
+export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onClose,onHide,pinned=false,onTogglePin,startTopup=false,initialScreen,initialAutoMode,previewSuccess=false,accountNote,serviceIndex=index}:{accountNote?:string;serviceIndex?:number;index:number;name:string;value:number;settings:BalanceSettings;onSettings:(s:BalanceSettings)=>void;onTopup:(amount:number)=>void;onClose:()=>void;onHide:()=>void;pinned?:boolean;onTogglePin?:()=>void;startTopup?:boolean;initialScreen?:DetailScreen;initialAutoMode?:AutoMode;previewSuccess?:boolean}){
+ const [screen,setScreen]=useState<DetailScreen>(initialScreen??(startTopup?'topup':'detail'));
  const [amount,setAmount]=useState('500');
- const [threshold,setThreshold]=useState('500');
+ const [threshold,setThreshold]=useState(String(settings.notifyThreshold??500));
+ const [showPreviewSuccess,setShowPreviewSuccess]=useState(previewSuccess);
+ const [autoModeOverride,setAutoModeOverride]=useState(initialAutoMode);
  const [creditedAmount,setCreditedAmount]=useState<number|null>(null);
  const backToDetails=()=>setScreen('detail');
  const openSettings=(kind:'auto'|'notify')=>{
+  setShowPreviewSuccess(false);
+  setAutoModeOverride(undefined);
   setThreshold(String((kind==='auto'?settings.autoThreshold:settings.notifyThreshold)??500));
   if(kind==='auto')setAmount(String(settings.autoAmount??500));
   setScreen(kind);
  };
  const openTopup=()=>{
+  setShowPreviewSuccess(false);
   setAmount('500');
   setCreditedAmount(null);
   setScreen('topup');
@@ -78,7 +84,7 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
  const neutral=serviceIndex===3;
  const title=accountNote ? `${name} ${accountNote}` : (index===2||index===3)?'+7 966 127 60 08':index===4?'Парковки Москвы':`${name} ${identifiers[index]}`;
  if(screen==='auto'){
-  return <AutoTopup index={serviceIndex} name={name} title={title} logo={logo} settings={settings} onBack={backToDetails} onSave={next=>{onSettings(next);backToDetails()}}/>;
+  return <AutoTopup initialMode={autoModeOverride} index={serviceIndex} name={name} title={title} logo={logo} settings={settings} onBack={backToDetails} onSave={next=>{onSettings(next);backToDetails()}}/>;
  }
  if(screen!=='detail'){
   const topup=screen==='topup';
@@ -129,7 +135,7 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
    </form>
   </section>
  }
- return <section className="subscription-sheet balance-sheet balance-sheet-service" data-prototype-screen={creditedAmount!==null?'topup-success':'details'} role="dialog" aria-modal="true" aria-label={name} onClick={e=>e.stopPropagation()} onKeyDown={e=>{if(e.key==='Escape')onClose()}}>
+ return <section className="subscription-sheet balance-sheet balance-sheet-service" data-prototype-screen={(creditedAmount!==null||showPreviewSuccess)?'topup-success':'details'} role="dialog" aria-modal="true" aria-label={name} onClick={e=>e.stopPropagation()} onKeyDown={e=>{if(e.key==='Escape')onClose()}}>
  <div className={"balance-service-header"+(neutral?" balance-service-neutral":"")}>
   <div className="balance-service-tint" aria-hidden="true"><img src={logo} alt=""/></div>
   <div className="subscription-grabber"/>
@@ -137,6 +143,7 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
   <div className="balance-service-logo"><img src={logo} alt=""/></div>
   <h2>{title}</h2>
   <div className="balance-amount"><strong className={value<0?'negative':''}>{rub(value)}</strong></div>
+ {showPreviewSuccess&&<div className="balance-success" role="status"><Check size={17}/>Пополнение выполнено</div>}
  {creditedAmount!==null&&<div className="balance-success" role="status"><Check size={17}/>Зачислено {rub(creditedAmount)}</div>}
  <button type="button" className="bc-primary balance-topup" onClick={openTopup}>{creditedAmount!==null?'Пополнить ещё':'Пополнить'}</button>
 

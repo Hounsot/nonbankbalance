@@ -10,16 +10,18 @@ import { BalancesCalm } from './components/balances-calm';
 import { PhoneFrame } from './components/phone-frame';
 import './components/wallet-light.css';
 import { usePrototypeUrl } from './prototype-url';
+import { readPrototypeRoute, type WalletEntry } from './prototype-route';
 export default function App(){
  const rootRef=useRef<HTMLElement>(null);
  usePrototypeUrl(rootRef);
- const [screen,setScreen]=useState<'wallet'|'payments'|'home'>('payments');
+ const [initialRoute]=useState(()=>readPrototypeRoute(window.location.search));
+ const [screen,setScreen]=useState<'wallet'|'payments'|'home'>(initialRoute.screen);
  const [walletOrigin,setWalletOrigin]=useState<'payments'|'home'>('payments');
- const [empty,setEmpty]=useState(false);
- const [onboarding,setOnboarding]=useState<number|null>(null);
+ const [empty,setEmpty]=useState(initialRoute.empty);
+ const [onboarding,setOnboarding]=useState<number|null>(initialRoute.onboarding);
  const [shortcut,setShortcut]=useState<WalletShortcut>('troika');
  const [onboardingSeen,setOnboardingSeen]=useState(false);
- const [entry,setEntry]=useState<{tab:'balances'|'subscriptions';card?:number;topup?:boolean;add?:ConnectionKind;subscription?:number}>({tab:'balances'});
+ const [entry,setEntry]=useState<WalletEntry>(initialRoute.entry);
  const [overview,setOverview]=useState<WalletOverview>({troika:1340,subscriptionTotal:3637,cards:[1340,480],subscriptionCount:4,balanceTotal:2276,attentionCount:1,balanceCount:5,hasTroika:true,debt:120});
  const openWallet=(tab:'balances'|'subscriptions'='balances',card?:number,topup?:boolean,add?:ConnectionKind,subscription?:number)=>{if(screen!=='wallet')setWalletOrigin(screen);if(empty&&!onboardingSeen&&!add){setOnboarding(0);return}setEntry({tab,card,topup,add,subscription});setScreen('wallet')};
  return <main ref={rootRef} data-prototype-page={screen} data-prototype-scenario={empty?'empty':'filled'} className="min-h-screen w-full px-4 py-8" style={{background:'#242426'}}>

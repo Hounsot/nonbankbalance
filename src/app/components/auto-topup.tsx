@@ -5,15 +5,15 @@ import paymentCard from '../../assets/balances-new/payment-card.png?inline';
 import mts from '../../assets/balances-new/830a2.svg?inline';
 import './auto-topup.css';
 
-type Mode = 'monthly' | 'balance' | 'constant';
+import type { AutoMode as Mode } from '../prototype-route';
 const modes: {value: Mode; label: string}[] = [
   {value:'monthly', label:'Раз в месяц'},
   {value:'balance', label:'По балансу'},
   {value:'constant', label:'Постоянный баланс'},
 ];
 
-export function AutoTopup({index,name,title,logo,settings,onBack,onSave}:{index:number;name:string;title:string;logo:string;settings:BalanceSettings;onBack:()=>void;onSave:(settings:BalanceSettings)=>void}){
-  const [mode,setMode]=useState<Mode>(settings.autoMode??'balance');
+export function AutoTopup({index,name,title,logo,settings,onBack,onSave,initialMode}:{index:number;name:string;title:string;logo:string;settings:BalanceSettings;initialMode?:Mode;onBack:()=>void;onSave:(settings:BalanceSettings)=>void}){
+  const [mode,setMode]=useState<Mode>(initialMode??settings.autoMode??'balance');
   const [label,setLabel]=useState(settings.autoName??(index===2?'Мой телефон':name));
   const [day,setDay]=useState(String(settings.autoDay??11));
   const [threshold,setThreshold]=useState(settings.autoThreshold?.toString()??'');
