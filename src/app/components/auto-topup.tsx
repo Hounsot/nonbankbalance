@@ -27,7 +27,7 @@ export function AutoTopup({index,name,title,logo,settings,onBack,onSave}:{index:
     (mode==='constant'||positive(amount)&&Number(amount)>=10&&Number(amount)<=15000)&&
     (mode==='monthly'||!limited||positive(limit));
 
-  return <section className="balance-flow-screen auto-screen" role="dialog" aria-modal="true" aria-labelledby="auto-title" onClick={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Escape')onBack()}}>
+  return <section className="balance-flow-screen auto-screen" data-prototype-screen={`auto-topup/${mode}`} role="dialog" aria-modal="true" aria-labelledby="auto-title" onClick={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Escape')onBack()}}>
     <header className="auto-header">
       <div className="auto-status" aria-hidden="true"><span>12:38</span><span>▰ ▴ ▮</span></div>
       <div className="balance-flow-header"><button type="button" aria-label="Назад" onClick={onBack}><ChevronLeft size={22}/></button><h2 id="auto-title">Автопополнение</h2></div>

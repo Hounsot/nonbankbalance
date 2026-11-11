@@ -28,7 +28,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
   setAddProgress(Math.max(0,Math.min(1,1-remaining/expansionDistance)));
  };
  const [tab,setTab]=useState<'balances'|'subscriptions'>('balances');
- useEffect(()=>{if(entry){setTab(entry.tab);setSheet(entry.add?{type:'connect'}:entry.subscription!==undefined?{type:'subscription',index:entry.subscription}:entry.card===undefined?null:{type:entry.card>=2?'balance':'card',index:entry.card>=2?entry.card-2:entry.card,topup:entry.topup});if(entry.add)setConnectionKind(entry.add);scrollRef.current?.scrollTo({top:0})}},[entry]);
+ useLayoutEffect(()=>{if(entry){setTab(entry.tab);setSheet(entry.add?{type:'connect'}:entry.subscription!==undefined?{type:'subscription',index:entry.subscription}:entry.card===undefined?null:{type:entry.card>=2?'balance':'card',index:entry.card>=2?entry.card-2:entry.card,topup:entry.topup});if(entry.add)setConnectionKind(entry.add);scrollRef.current?.scrollTo({top:0})}},[entry]);
  useLayoutEffect(()=>{updateBottom();const el=scrollRef.current;if(!el)return;const observer=new ResizeObserver(updateBottom);observer.observe(el);for(const child of el.children)observer.observe(child);return ()=>observer.disconnect()},[tab,allEmpty]);
  const [balances,setBalances]=useState(initial); const [cards,setCards]=useState([1340,480]);
  useEffect(()=>{onOverview?.({attentionCount:balances.filter((b,i)=>!accountSettings[i+2].hidden&&b.value<0).length,phoneBalance:accountSettings[2].hidden?undefined:balances[0].value,quickBalances:{troika:accountSettings[0].hidden?undefined:cards[0],social:accountSettings[1].hidden?undefined:cards[1],parking:accountSettings[4].hidden?undefined:balances[2].value},debt:balances.reduce((sum,b,i)=>sum+(accountSettings[i+2].hidden?0:Math.max(0,-b.value)),0),nextSubscription:subscriptions.map((s,index)=>({...s,index})).filter(s=>s.active&&!s.hidden).sort((a,b)=>a.days-b.days)[0],troika:accountSettings[0].hidden?0:cards[0],hasTroika:!accountSettings[0].hidden,subscriptionTotal,cards:cards.filter((_,i)=>!accountSettings[i].hidden),subscriptionCount,balanceCount:visibleBalanceCount,balanceTotal:cards.reduce((a,b,i)=>a+(accountSettings[i].hidden?0:b),0)+balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:b.value),0)})},[cards,balances,subscriptions,subscriptionTotal,subscriptionCount,accountSettings,onOverview]);
@@ -52,7 +52,13 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const beginConnect=(kind:ConnectionKind)=>{setConnectionKind(kind);open('connect')};
  const connect=(kind:ConnectionKind,index:number)=>{if(kind==='subscription'){setSubscriptions(all=>all.map((s,i)=>i===index?{...s,hidden:false,active:true}:s));setTab('subscriptions')}else{const key=kind==='card'?index:index+2;setAccountSettings(all=>all.map((s,i)=>i===key?{...s,hidden:false}:s));setTab('balances')}setSheet(null);scrollRef.current?.scrollTo({top:0})};
  const header=<header className="calm-header"><button className="wallet-back" aria-label="Назад" type="button" onClick={onBack}><ChevronLeft size={20}/></button><h1>{tab==='subscriptions'?'Подписки':'Внешние балансы'}</h1></header>;
- return <div className="bc calm segmented new-balances">
+ const service = sheet?.type === 'card'
+  ? (sheet.index === 1 ? 'social-card' : 'troika')
+  : addedBalance?.service ?? ['mobile', 'internet', 'parking'][sheet?.index ?? 0] ?? 'account';
+ const walletScreen = ['wallet', tab, sheet?.type,
+  sheet?.type === 'card' || sheet?.type === 'balance' ? service : undefined,
+ ].filter(Boolean).join('/');
+ return <div className="bc calm segmented new-balances" data-prototype-screen={walletScreen}>
  <div className="bc-scroll" ref={scrollRef} onScroll={updateBottom}>
  {header}
  <BalancesNew pinnedIndex={pinnedIndex} onPin={setPinnedIndex} overviewSheet={sheet?.type==='attention'||sheet?.type==='pin'||sheet?.type==='autotopups'||sheet?.type==='balance-notifications'?sheet.type:null} onOverviewSheet={open} onCloseOverview={()=>setSheet(null)} cards={displayedCards} balances={displayedBalances} settings={accountSettings} onOpen={(type,index)=>open(type,index)} onConnect={beginConnect}/>

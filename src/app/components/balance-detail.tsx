@@ -88,7 +88,7 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
   const validAmount=amount!==''&&Number.isFinite(amountValue)&&amountValue>=10&&amountValue<=15000;
   const validThreshold=threshold!==''&&Number.isFinite(thresholdValue)&&thresholdValue>=0;
   const canSave=topup?validAmount:validThreshold;
-  return <section className="balance-flow-screen" role="dialog" aria-modal="true" aria-labelledby="balance-flow-title" onClick={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Escape')backToDetails()}}>
+  return <section className="balance-flow-screen" data-prototype-screen={topup?'topup':'low-balance-notification'} role="dialog" aria-modal="true" aria-labelledby="balance-flow-title" onClick={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Escape')backToDetails()}}>
    <header className="balance-flow-header">
     <button type="button" aria-label="Назад" onClick={backToDetails}><ChevronLeft size={22}/></button>
     <h2 id="balance-flow-title">{heading}</h2>
@@ -129,7 +129,7 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
    </form>
   </section>
  }
- return <section className="subscription-sheet balance-sheet balance-sheet-service" role="dialog" aria-modal="true" aria-label={name} onClick={e=>e.stopPropagation()} onKeyDown={e=>{if(e.key==='Escape')onClose()}}>
+ return <section className="subscription-sheet balance-sheet balance-sheet-service" data-prototype-screen={creditedAmount!==null?'topup-success':'details'} role="dialog" aria-modal="true" aria-label={name} onClick={e=>e.stopPropagation()} onKeyDown={e=>{if(e.key==='Escape')onClose()}}>
  <div className={"balance-service-header"+(neutral?" balance-service-neutral":"")}>
   <div className="balance-service-tint" aria-hidden="true"><img src={logo} alt=""/></div>
   <div className="subscription-grabber"/>
