@@ -1,6 +1,6 @@
 import { AutoTopup } from './auto-topup';
 import { balanceLogos } from './balance-logos';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Check, ChevronLeft } from 'lucide-react';
 import troikaIcon from '../../assets/balances-new/detail-troika.svg?inline';
 import parkingIcon from '../../assets/balances-new/detail-parking.png?inline';
@@ -15,6 +15,49 @@ export type BalanceSettings={auto:boolean;notify:boolean;autoMode?:'monthly'|'ba
 export const balanceSettings:BalanceSettings[]=[1340,480,650,750,500].map((amount,i)=>({auto:false,notify:true,history:[{amount,date:'24 октября'},{amount:amount+(i%2?100:0),date:'12 октября'},{amount,date:'1 октября'}]}));
 const rub=(n:number)=>n.toLocaleString('ru-RU')+' ₽';
 const identifiers=['·· 7731','·· 0842','·· 8006','·· 3341','А 777 ВС 77'];
+// Prototype travel history and fare; replace with provider data when available.
+const tripFare = 75;
+const recentTrips = [1, 2, 1, 1];
+const dayFormat = new Intl.NumberFormat('ru-RU', { style: 'unit', unit: 'day', unitDisplay: 'long' });
+const tripCount = (value: number) => `${value} ${value % 10 === 1 && value % 100 !== 11 ? 'поездку' : value % 10 >= 2 && value % 10 <= 4 && (value % 100 < 12 || value % 100 > 14) ? 'поездки' : 'поездок'}`;
+
+function TroikaAnalytics({ balance }: { balance: number }) {
+ const gradientId = useId();
+ const currentTrend = 'M 1 3 C 10 3, 10 9, 16 9 S 24 10, 28 15 S 36 16, 41 21 S 49 22, 53 26 Q 55 27, 57 27';
+ const trips = Math.floor(Math.max(0, balance) / tripFare);
+ const dailyTrips = recentTrips.reduce((sum, count) => sum + count, 0) / recentTrips.length;
+ const days = Math.floor(trips / dailyTrips);
+
+ return (
+  <section className="troika-insight" aria-labelledby="troika-insight-title">
+   <h3 id="troika-insight-title">Аналитика</h3>
+   <dl className="troika-insight-stats">
+    <div><dt>Баланс на</dt><dd>≈ {tripCount(trips)}</dd></div>
+    <div><dt>В вашем темпе</dt><dd>≈ {dayFormat.format(days)}</dd></div>
+   </dl>
+   <div className="troika-insight-row">
+    <div className="troika-insight-status">
+     <strong>На 20% меньше поездок</strong>
+     <span>Чем за те же дни октября</span>
+    </div>
+    <div className="troika-insight-trend" role="img" aria-label="Остаток на карте. Синяя линия — текущий период, серый пунктир — те же дни октября">
+     <svg width="58" height="36" viewBox="0 0 58 36" aria-hidden="true">
+      <defs>
+       <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+        <stop stopColor="#3D9CFA" stopOpacity=".3"/>
+        <stop offset="1" stopColor="#3D9CFA" stopOpacity="0"/>
+       </linearGradient>
+      </defs>
+      <path d="M 1 3 C 8 4, 12 11, 19 15 S 28 18, 34 23 S 47 30, 57 33" fill="none" stroke="#9ca5b1" strokeWidth="1.5" strokeDasharray="1 5" strokeLinecap="round"/>
+      <path d={`${currentTrend} V 36 H 1 Z`} fill={`url(#${gradientId})`}/>
+      <path d={currentTrend} fill="none" stroke="#3D9CFA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+     </svg>
+    </div>
+   </div>
+  </section>
+ );
+}
+
 export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onClose,onHide,pinned=false,onTogglePin,startTopup=false,accountNote,serviceIndex=index}:{accountNote?:string;serviceIndex?:number;index:number;name:string;value:number;settings:BalanceSettings;onSettings:(s:BalanceSettings)=>void;onTopup:(amount:number)=>void;onClose:()=>void;onHide:()=>void;pinned?:boolean;onTogglePin?:()=>void;startTopup?:boolean}){
  const [screen,setScreen]=useState<'detail'|'topup'|'auto'|'notify'>(startTopup?'topup':'detail');
  const [amount,setAmount]=useState('500');
@@ -32,8 +75,8 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
   setScreen('topup');
  };
  const logo=serviceIndex===0?troikaIcon:serviceIndex===4?parkingIcon:balanceLogos[serviceIndex];
- const neutral=serviceIndex===2||serviceIndex===3;
- const title=accountNote ? `${name} ${accountNote}` : neutral?'+7 966 127 60 08':index===4?'Парковки Москвы':`${name} ${identifiers[index]}`;
+ const neutral=serviceIndex===3;
+ const title=accountNote ? `${name} ${accountNote}` : (index===2||index===3)?'+7 966 127 60 08':index===4?'Парковки Москвы':`${name} ${identifiers[index]}`;
  if(screen==='auto'){
   return <AutoTopup index={serviceIndex} name={name} title={title} logo={logo} settings={settings} onBack={backToDetails} onSave={next=>{onSettings(next);backToDetails()}}/>;
  }
@@ -98,6 +141,7 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
  <button type="button" className="bc-primary balance-topup" onClick={openTopup}>{creditedAmount!==null?'Пополнить ещё':'Пополнить'}</button>
 
  </div>
+ {index===0 && <TroikaAnalytics balance={value} />}
  <section className="balance-management" aria-label="Управление">
   <h3>Управление</h3>
   <button type="button" className="balance-management-row" onClick={()=>openSettings('auto')}>

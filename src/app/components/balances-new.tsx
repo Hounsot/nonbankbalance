@@ -24,10 +24,10 @@ export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,on
    hidden: settings[offset+5].hidden, type: 'balance' as const, index: offset+3,
   })),
  ];
- const options=[{title:'Транспортные карты',note:'Тройка, подорожник, социальные карты',kind:'card' as const,cls:'transport'}, {title:'Сотовая связь',note:'Номера МТС, билайн, мегафон, теле2 и т‑мобайл',kind:'mobile' as const,cls:'mobile'}, {title:'Парковки России',note:'',kind:'parking' as const,cls:'parking'}, {title:'Домашний интернет',note:'МТС / МГТС',kind:'internet' as const,cls:'internet'}];
+ const options=[{title:'Транспортные карты',note:'Тройка, подорожник, социальные карты',kind:'card' as const,cls:'transport'}, {title:'Сотовая связь',note:'Номера МТС, билайн, мегафон, теле2 и т‑мобайл',kind:'mobile' as const,cls:'mobile'}, {title:'Парковки России',note:'',kind:'parking' as const,cls:'parking'}, {title:'Домашний интернет',note:'МТС / МГТС',kind:'internet' as const,cls:'internet'}, {title:'Автодор',note:'',kind:'avtodor' as const,cls:'avtodor'}];
  const visibleRows=rows.filter(row=>!row.hidden);
  const accountIndex=(row:typeof rows[number])=>row.type==='card'?row.index:row.index+2;
- const isNeutral=(row:typeof rows[number])=>row.type==='balance'&&row.index<2;
+ const isNeutral=(row:typeof rows[number])=>row.type==='balance'&&row.index===1;
  const pinned=visibleRows.find(row=>accountIndex(row)===pinnedIndex);
  const automaticRows=visibleRows.filter(row=>settings[row.type==='card'?row.index:row.index+2].auto);
  const notifiedRows=visibleRows.filter(row=>settings[row.type==='card'?row.index:row.index+2].notify);
@@ -40,7 +40,7 @@ export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,on
   <div className="bn-overview">
    <div className="bn-overview-grid">
     <div className="bn-overview-pin">
-     {pinned&&<img className={"bn-pin-icon"+(isNeutral(pinned)?" bn-pin-icon-neutral":"")} src={pinned.type==='card'&&pinned.index===0?pinnedTroika:pinned.icon} alt=""/>}
+     {pinned&&<img className={"bn-pin-icon"+(isNeutral(pinned)?" bn-pin-icon-neutral":pinned.icon===balanceLogos[2]?" bn-pin-icon-square":"")} src={pinned.type==='card'&&pinned.index===0?pinnedTroika:pinned.icon} alt=""/>}
      <button className="bn-pin-select" type="button" onClick={()=>onOverviewSheet('pin')} aria-haspopup="dialog" aria-label={pinned?'Изменить закреплённый баланс':undefined}><img src={pinIcon} alt=""/>{!pinned&&'Закрепить баланс'}</button>
      {pinned&&<button className="bn-pin-account" type="button" onClick={()=>onOpen(pinned.type,pinned.index)}><span>{pinned.name}{pinned.type==='card'?' '+pinned.note:''}</span><strong>{pinned.amount.toLocaleString('ru-RU')} ₽</strong></button>}
     </div>

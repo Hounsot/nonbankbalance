@@ -121,7 +121,8 @@
   background: #fff;
   border-radius: 32px;
 }
-.balance-sheet-service .balance-management h3 {
+.balance-sheet-service .balance-management h3,
+.balance-sheet-service .troika-insight h3 {
   margin: 0 0 10px;
   color: #626c77;
   font: 500 14px/20px "MTS Text", Arial, sans-serif;
@@ -143,3 +144,48 @@
 .balance-management-row .subscription-switch { flex: none; width: 56px; height: 32px; padding: 4px; }
 .balance-management-row .subscription-switch i { width: 24px; height: 24px; }
 .balance-sheet-service .balance-management-row .subscription-switch[aria-checked=true] i { transform: translateX(24px); }
+
+
+.calm .balance-sheet-service .troika-insight {
+  margin: 0 0 12px;
+  padding: 20px;
+  border-radius: 32px;
+  background: #fff;
+}
+.troika-insight-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 20px;
+  background: #f2f3f7;
+  color: #626c77;
+  font: 400 14px/20px "MTS Compact", Arial, sans-serif;
+}
+.balance-sheet-service .troika-insight h3 { margin: 0 0 8px; padding-top: 4px; }
+.troika-insight-status { display: flex; flex-direction: column; min-width: 0; }
+.troika-insight-status strong {
+  color: #1d2023;
+  font: 400 17px/24px "MTS Compact", Arial, sans-serif;
+}
+.troika-insight-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 8px;
+  color: #626c77;
+  font: 400 14px/20px "MTS Compact", Arial, sans-serif;
+}
+.troika-insight-stats > div {
+  padding: 12px 16px;
+  border-radius: 20px;
+  background: #f2f3f7;
+}
+.troika-insight-stats dd {
+  margin: 4px 0 0;
+  color: #1d2023;
+  font-size: 17px;
+}
+.troika-insight-trend { flex: none; }
+.troika-insight-trend svg { display: block; }
