@@ -7,3 +7,23 @@
 .we-manual{display:flex;flex-direction:column;gap:14px;margin-top:20px}.we-manual label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:#686870}.we-manual input{background:#f0f0f2;border:0;border-radius:12px;padding:12px;color:#202024;font-size:15px}.we-manual button{background:#202024;color:white;border-radius:14px;padding:15px;text-align:center;font-weight:600}.we-manual button:disabled{opacity:.4}
 
 .we-manual .we-back { background: transparent; color: #626c77; padding: 4px; }
+
+.calm .we-connect-modal .wallet-modal-position { display: flex; flex-direction: column; max-height: calc(100% - 86px); }
+.calm .we-connect-modal .wallet-modal { flex: 0 1 auto; min-height: 0; max-height: 100%; }
+.we-connect-modal .wallet-modal-content { padding-bottom: 24px; }
+.we-connect-list > .bn-grid { grid-template-rows: 98px 78px 20px 78px; }
+.we-connect-list .bn-offer { display: flex; align-items: flex-start; gap: 0; min-width: 0; padding: 16px; border: 0; text-align: left; }
+.we-connect-list .bn-offer span { max-width: 75%; }
+.we-connect-list .bn-offer img { width: 55px; height: 55px; }
+.we-connect-list .bn-offer small { font-size: 12px; line-height: 16px; }
+.we-connect-list .bn-grid:not(:has(.transport)) { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+.we-connect-list .bn-grid:not(:has(.transport)) .bn-offer { grid-column: auto; grid-row: auto; min-height: 90px; }
+.we-found { margin-bottom: 12px; padding: 10px 12px; border-radius: 20px; background: #f2f3f7; }
+.we-found > strong { display: block; margin-bottom: 2px; color: #626c77; font: 500 14px/20px "MTS Compact", Arial, sans-serif; }
+.we-found .bn-row { min-height: 48px; gap: 8px; }
+.we-found .bn-row-icon { width: 32px; height: 32px; border-radius: 9px; }
+.we-found .bn-row-icon img { width: 32px; height: 32px; }
+.we-found .bn-row-info b { font-size: 15px; }
+.we-found .bn-row-info small { font-size: 12px; line-height: 16px; }
+.we-found .bn-row-amount { font-size: 15px; }
+.calm .we-connect-list .we-found-add { display: flex; justify-content: center; width: 100%; padding: 8px 12px; border: 0; border-radius: 12px; background: #fff; color: #1d2023; font: 500 14px/20px "MTS Compact", Arial, sans-serif; }

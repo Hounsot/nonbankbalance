@@ -189,3 +189,4 @@
 }
 .troika-insight-trend { flex: none; }
 .troika-insight-trend svg { display: block; }
+.parking-insight .troika-insight-row + .troika-insight-row { margin-top: 8px; }

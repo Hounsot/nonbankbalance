@@ -10,6 +10,7 @@ export type WalletEntry = {
   topup?: boolean;
   add?: ConnectionKind;
   connect?: boolean;
+  discovery?: boolean;
   subscription?: number;
   overview?: typeof overviewSheets[number];
   detailScreen?: DetailScreen;
@@ -26,10 +27,11 @@ export function readPrototypeRoute(search: string) {
   const empty = query.get('scenario') === 'empty';
   const entry: WalletEntry = { tab: section === 'subscriptions' ? 'subscriptions' : 'balances' };
   const screen = page === 'home' || page === 'wallet' ? page : 'payments';
-  const onboardingMatch = /^step-([1-3])$/.exec(section ?? '');
+  const onboardingMatch = /^step-([1-4])$/.exec(section ?? '');
   const onboarding = page === 'onboarding' && onboardingMatch ? Number(onboardingMatch[1]) - 1 : null;
 
   if (screen === 'wallet') {
+    if (action === 'discovered') entry.discovery = true;
     if (action === 'card' && (service === 'troika' || service === 'social-card')) {
       entry.card = service === 'troika' ? 0 : 1;
     }

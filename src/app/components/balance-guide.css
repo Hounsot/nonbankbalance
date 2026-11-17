@@ -1,0 +1,22 @@
+.balance-guide { position: absolute; inset: 0; z-index: 100; pointer-events: none; }
+.balance-guide-intro { animation: balance-guide-appear .35s ease-out both; }
+.balance-guide-leaving { animation: balance-guide-disappear .18s ease-in both; }
+.balance-guide-leaving * { pointer-events: none !important; }
+@keyframes balance-guide-appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes balance-guide-disappear { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .balance-guide-intro { animation: none; }
+  .balance-guide-leaving { opacity: 0; animation: none; }
+}
+.balance-guide-dim { position: absolute; inset: 0; pointer-events: none; }
+.balance-guide-block { position: absolute; background: transparent; pointer-events: auto; }
+.balance-guide-ring { position: absolute; border-radius: 18px; box-shadow: 0 0 0 4px #f2f3f7; pointer-events: none; }
+.balance-guide-popover { position: absolute; z-index: 1; box-sizing: border-box; padding: 14px 38px 14px 14px; border-radius: 20px; color: #1d2023; background: white; box-shadow: 0 8px 24px #0002; font-family: "MTS Compact", Arial, sans-serif; pointer-events: auto; }
+.balance-guide-popover strong { display: block; font-size: 17px; line-height: 24px; font-weight: 500; }
+.balance-guide-popover p { margin: 4px 0 0; font-size: 14px; line-height: 18px; }
+.balance-guide-close { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 10px; background: #f2f3f7; color: #626c77; }
+.balance-guide-arrow { position: absolute; width: 48px; height: 9px; left: calc(50% - 24px); }
+.balance-guide-popover-above .balance-guide-arrow { bottom: -8px; transform: rotate(180deg); }
+.balance-guide-popover-below .balance-guide-arrow { top: -8px; }
+
+.calm .balance-guide-done { margin-top: 12px; padding: 8px 14px; border-radius: 12px; background: #1d2023; color: #fff; font: 500 14px/20px "MTS Compact", Arial, sans-serif; }

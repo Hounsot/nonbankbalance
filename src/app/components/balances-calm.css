@@ -42,3 +42,28 @@
 @media(prefers-reduced-motion:reduce){.segmented .calm-add-dock button,.segmented .calm-tabs button{transition:none}}
 
 .calm .calm-value.is-negative,.calm-attention .is-negative{color:#dc4545}.calm-attention{margin:18px 25px 14px}.calm-attention h2{font-size:13px;font-weight:500;color:#74747d;margin:0 0 8px}.calm-attention button{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;background:#fff;border:1px solid #ededf0;border-radius:15px;margin-top:6px}.calm-attention button>span{flex:1;min-width:0}.calm-attention b,.calm-attention small{display:block}.calm-attention b{font-size:13px;font-weight:500}.calm-attention small{font-size:11px;color:#76767e;margin-top:3px}.calm-attention strong{font-size:13px;font-weight:500}.calm-attention svg{color:#94949d}
+.discovered-accounts { display: grid; gap: 8px; }
+.discovered-account { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 20px; background: #f2f3f7; font: 400 17px/24px "MTS Compact", Arial, sans-serif; }
+.discovered-account img { width: 48px; height: 48px; object-fit: contain; border-radius: 12px; }
+.discovered-account small { display: block; color: #626c77; font-size: 14px; line-height: 20px; }
+.discovered-actions { display: grid; gap: 8px; margin-top: 24px; }
+.calm .discovered-actions button { min-height: 52px; border-radius: 16px; text-align: center; font: 700 12px/16px "MTS Wide", Arial, sans-serif; text-transform: uppercase; }
+.calm .discovered-add { background: #1d2023; color: #fff; }
+.calm .discovered-overlay { align-items: center; justify-content: center; padding: 20px 12px; background: rgba(29,32,35,.4); }
+.discovered-modal { position: relative; width: 100%; max-height: calc(100% - 24px); overflow-y: auto; border-radius: 32px; background: #fff; color: #1d2023; scrollbar-width: none; }
+.calm .discovered-close { position: absolute; z-index: 2; right: 16px; top: 16px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 12px; background: rgba(255,255,255,.8); color: #1d2023; }
+.discovered-art { position: relative; display: flex; align-items: center; justify-content: center; height: 148px; overflow: hidden; background: linear-gradient(135deg,#eae6ff 0%,#e7f6ff 52%,#ffe8ed 100%); }
+.discovered-art-glow { position: absolute; width: 150px; height: 90px; border-radius: 50%; background: rgba(155,140,255,.28); filter: blur(24px); }
+.discovered-art-icon { position: relative; display: grid; place-items: center; width: 66px; height: 66px; border: 4px solid #fff; border-radius: 21px; overflow: hidden; box-shadow: 0 8px 24px #37325125; }
+.discovered-art-icon img { width: 100%; height: 100%; object-fit: cover; }
+.discovered-art-mobile { z-index: 1; transform: rotate(-9deg) translate(5px,5px); }
+.discovered-art-internet { background: #f2f3f7; transform: rotate(9deg) translate(-5px,-5px); }
+.discovered-art-sparkle { position: absolute; top: 31px; right: calc(50% - 102px); color: #a28af4; font-size: 25px; }
+.discovered-body { padding: 20px; }
+.discovered-body h2 { margin: 0; text-align: center; font: 500 20px/24px 'MTS Wide',Arial,sans-serif; }
+.discovered-body > p { margin: 8px 4px 16px; text-align: center; color: #626c77; font: 400 15px/21px 'MTS Compact',Arial,sans-serif; }
+.discovered-modal .discovered-accounts { gap: 0; }
+.discovered-modal .bn-row { min-height: 60px; }
+.discovered-modal .bn-row-icon, .discovered-modal .bn-row-icon img { width: 44px; height: 44px; }
+.discovered-modal .bn-row-icon { border-radius: 14px; }
+.discovered-modal .discovered-actions { margin-top: 16px; }

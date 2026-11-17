@@ -22,9 +22,77 @@ const recentTrips = [1, 2, 1, 1];
 const dayFormat = new Intl.NumberFormat('ru-RU', { style: 'unit', unit: 'day', unitDisplay: 'long' });
 const tripCount = (value: number) => `${value} ${value % 10 === 1 && value % 100 !== 11 ? 'поездку' : value % 10 >= 2 && value % 10 <= 4 && (value % 100 < 12 || value % 100 > 14) ? 'поездки' : 'поездок'}`;
 
-function TroikaAnalytics({ balance }: { balance: number }) {
+function ServiceAnalytics({ title, description }: { title: string; description: string }) {
+ const headingId = useId();
+ return (
+  <section className="troika-insight" aria-labelledby={headingId}>
+   <h3 id={headingId}>Аналитика</h3>
+   <div className="troika-insight-row">
+    <div className="troika-insight-status">
+     <strong>{title}</strong>
+     <span>{description}</span>
+    </div>
+   </div>
+  </section>
+ );
+}
+
+// Sample parking costs for the seven days ending on the prototype date.
+const parkingSessionCosts = [80, 240, 160];
+const parkingDateFormat = new Intl.DateTimeFormat('ru-RU', {
+ day: 'numeric', month: 'long', timeZone: 'UTC',
+});
+
+function BalanceTrend({ label, similarPeriods = false }: { label: string; similarPeriods?: boolean }) {
  const gradientId = useId();
  const currentTrend = 'M 1 3 C 10 3, 10 9, 16 9 S 24 10, 28 15 S 36 16, 41 21 S 49 22, 53 26 Q 55 27, 57 27';
+ return (
+    <div className="troika-insight-trend" role="img" aria-label={label}>
+     <svg width="58" height="36" viewBox="0 0 58 36" aria-hidden="true">
+      <defs>
+       <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+        <stop stopColor="#3D9CFA" stopOpacity=".3"/>
+        <stop offset="1" stopColor="#3D9CFA" stopOpacity="0"/>
+       </linearGradient>
+      </defs>
+      <path d={similarPeriods
+       ? 'M 1 3 C 9 4, 13 13, 22 14 S 34 16, 41 23 S 51 26, 57 27'
+       : 'M 1 3 C 8 4, 12 11, 19 15 S 28 18, 34 23 S 47 30, 57 33'}
+       fill="none" stroke="#9ca5b1" strokeWidth="1.5" strokeDasharray="1 5" strokeLinecap="round"/>
+      <path d={`${currentTrend} V 36 H 1 Z`} fill={`url(#${gradientId})`}/>
+      <path d={currentTrend} fill="none" stroke="#3D9CFA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+     </svg>
+    </div>
+ );
+}
+
+function ParkingAnalytics({ balance }: { balance: number }) {
+ const headingId = useId();
+ const dailySpend = parkingSessionCosts.reduce((sum, cost) => sum + cost, 0) / 7;
+ const days = Math.floor(Math.max(0, balance) / dailySpend);
+ const estimatedDate = parkingDateFormat.format(Date.UTC(2026, 10, 11 + days));
+
+ return (
+  <section className="troika-insight parking-insight" aria-labelledby={headingId}>
+   <h3 id={headingId}>Аналитика</h3>
+   <div className="troika-insight-row">
+    <div className="troika-insight-status">
+     <strong>Траты как обычно</strong>
+     <span>Как в октябре</span>
+    </div>
+    <BalanceTrend similarPeriods label="Динамика остатка. Синяя линия — текущий период, серый пунктир — те же дни октября"/>
+   </div>
+   <div className="troika-insight-row">
+    <div className="troika-insight-status">
+     <strong>{balance <= 0 ? 'Пополните баланс' : days === 0 ? 'Баланс скоро закончится' : `Хватит примерно до ${estimatedDate}`}</strong>
+     {days > 0 && <span>При обычных тратах</span>}
+    </div>
+   </div>
+  </section>
+ );
+}
+
+function TroikaAnalytics({ balance }: { balance: number }) {
  const trips = Math.floor(Math.max(0, balance) / tripFare);
  const dailyTrips = recentTrips.reduce((sum, count) => sum + count, 0) / recentTrips.length;
  const days = Math.floor(trips / dailyTrips);
@@ -41,19 +109,7 @@ function TroikaAnalytics({ balance }: { balance: number }) {
      <strong>На 20% меньше поездок</strong>
      <span>Чем за те же дни октября</span>
     </div>
-    <div className="troika-insight-trend" role="img" aria-label="Остаток на карте. Синяя линия — текущий период, серый пунктир — те же дни октября">
-     <svg width="58" height="36" viewBox="0 0 58 36" aria-hidden="true">
-      <defs>
-       <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-        <stop stopColor="#3D9CFA" stopOpacity=".3"/>
-        <stop offset="1" stopColor="#3D9CFA" stopOpacity="0"/>
-       </linearGradient>
-      </defs>
-      <path d="M 1 3 C 8 4, 12 11, 19 15 S 28 18, 34 23 S 47 30, 57 33" fill="none" stroke="#9ca5b1" strokeWidth="1.5" strokeDasharray="1 5" strokeLinecap="round"/>
-      <path d={`${currentTrend} V 36 H 1 Z`} fill={`url(#${gradientId})`}/>
-      <path d={currentTrend} fill="none" stroke="#3D9CFA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-     </svg>
-    </div>
+    <BalanceTrend label="Остаток на карте. Синяя линия — текущий период, серый пунктир — те же дни октября"/>
    </div>
   </section>
  );
@@ -149,6 +205,9 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
 
  </div>
  {index===0 && <TroikaAnalytics balance={value} />}
+ {index===2 && <ServiceAnalytics title="Связь оплачена до 15 ноября" description="Тариф — 650 ₽ в месяц"/>}
+ {index===3 && <ServiceAnalytics title="Следующее списание 15 ноября" description="Тариф — 750 ₽ в месяц"/>}
+ {serviceIndex===4 && <ParkingAnalytics balance={value} />}
  <section className="balance-management" aria-label="Управление">
   <h3>Управление</h3>
   <button type="button" className="balance-management-row" onClick={()=>openSettings('auto')}>

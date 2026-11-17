@@ -191,7 +191,7 @@ export function PaymentsPaySection({overview,onWallet,shortcut,onLearn,horizonta
                 </span>
               )}
             </button>
-            {overview.balanceCount===0&&<button className="pay-wallet-learn" onClick={()=>onLearn(0)}>Как работает кошелёк</button>}
+            {overview.balanceCount===0&&<button className="pay-wallet-learn" onClick={()=>onLearn(0)}>Как работают внешние балансы</button>}
           </div>
         </div>
         <div className="content-stretch flex flex-col items-start pt-[var(--8,8px)] relative rounded-[var(--radius\/16,16px)] shrink-0 w-full" data-node-id="40009188:56081" data-name="Payments cells">
