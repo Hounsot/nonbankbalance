@@ -1,4 +1,4 @@
-import troika from '../../assets/balances-new/7d9f7.svg?inline';
+import troika from '../../assets/balances-new/troika-emblem.png';
 import socialCard from '../../assets/payments/mts-card-mini.png?inline';
 import mobile from '../../assets/balances-new/830a2.svg?inline';
 import internet from '../../assets/balances-new/detail-internet.svg?inline';

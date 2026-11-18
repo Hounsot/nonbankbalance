@@ -2,8 +2,7 @@ import type { AutoMode, DetailScreen } from "../prototype-route";
 import { AutoTopup } from './auto-topup';
 import { balanceLogos } from './balance-logos';
 import { useId, useState } from 'react';
-import { Check, ChevronLeft } from 'lucide-react';
-import troikaIcon from '../../assets/balances-new/detail-troika.svg?inline';
+import { Check, ChevronLeft, ChevronDown } from 'lucide-react';
 import parkingIcon from '../../assets/balances-new/detail-parking.png?inline';
 import autoIcon from '../../assets/balances-new/808fc.svg?inline';
 import notificationIcon from '../../assets/balances-new/7a257.svg?inline';
@@ -11,6 +10,7 @@ import paymentChevron from '../../assets/balances-new/detail-chevron.svg?inline'
 import paymentCard from '../../assets/balances-new/payment-card.png?inline';
 import historyArrow from '../../assets/balances-new/eb47b.svg?inline';
 import closeIcon from '../../assets/balances-new/b1498.svg?inline';
+import backspaceIcon from '../../assets/balances-new/topup-backspace.svg?inline';
 import './balance-detail.css';
 export type BalanceSettings={auto:boolean;notify:boolean;autoMode?:'monthly'|'balance'|'constant';autoName?:string;autoDay?:number;autoLimit?:number;autoThreshold?:number;autoAmount?:number;notifyThreshold?:number;hidden?:boolean;history:{amount:number;date:string}[]};
 export const balanceSettings:BalanceSettings[]=[1340,480,650,750,500].map((amount,i)=>({auto:false,notify:true,history:[{amount,date:'24 октября'},{amount:amount+(i%2?100:0),date:'12 октября'},{amount,date:'1 октября'}]}));
@@ -117,7 +117,7 @@ function TroikaAnalytics({ balance }: { balance: number }) {
 
 export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onClose,onHide,pinned=false,onTogglePin,startTopup=false,initialScreen,initialAutoMode,previewSuccess=false,accountNote,serviceIndex=index}:{accountNote?:string;serviceIndex?:number;index:number;name:string;value:number;settings:BalanceSettings;onSettings:(s:BalanceSettings)=>void;onTopup:(amount:number)=>void;onClose:()=>void;onHide:()=>void;pinned?:boolean;onTogglePin?:()=>void;startTopup?:boolean;initialScreen?:DetailScreen;initialAutoMode?:AutoMode;previewSuccess?:boolean}){
  const [screen,setScreen]=useState<DetailScreen>(initialScreen??(startTopup?'topup':'detail'));
- const [amount,setAmount]=useState('500');
+ const [amount,setAmount]=useState(initialScreen==='topup'||startTopup?'':'500');
  const [threshold,setThreshold]=useState(String(settings.notifyThreshold??500));
  const [showPreviewSuccess,setShowPreviewSuccess]=useState(previewSuccess);
  const [autoModeOverride,setAutoModeOverride]=useState(initialAutoMode);
@@ -132,18 +132,44 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
  };
  const openTopup=()=>{
   setShowPreviewSuccess(false);
-  setAmount('500');
+  setAmount('');
   setCreditedAmount(null);
   setScreen('topup');
  };
- const logo=serviceIndex===0?troikaIcon:serviceIndex===4?parkingIcon:balanceLogos[serviceIndex];
+ const logo=serviceIndex===4?parkingIcon:balanceLogos[serviceIndex];
  const neutral=serviceIndex===3;
  const title=accountNote ? `${name} ${accountNote}` : (index===2||index===3)?'+7 966 127 60 08':index===4?'Парковки Москвы':`${name} ${identifiers[index]}`;
  if(screen==='auto'){
   return <AutoTopup initialMode={autoModeOverride} index={serviceIndex} name={name} title={title} logo={logo} settings={settings} onBack={backToDetails} onSave={next=>{onSettings(next);backToDetails()}}/>;
  }
+ if(screen==='topup'){
+  const amountValue=Number(amount.replace(',','.'));
+  const validAmount=amount!==''&&Number.isFinite(amountValue)&&amountValue>=10&&amountValue<=1000000;
+  const destination=accountNote || (index===2?'+7 966 127 60 08':index===3?'МГТС ·· 4218':index===4?'А 777 ВС 77':index===0?'·· 4328':identifiers[index]);
+  const enterKey=(key:string)=>setAmount(previous=>{
+   if(key==='backspace')return previous.slice(0,-1);
+   if(key===',')return previous.includes(',')?previous:(previous||'0')+',';
+   const [whole,decimal]=previous.split(',');
+   if(decimal!==undefined&&decimal.length>=2)return previous;
+   if(whole.length>=7&&decimal===undefined)return previous;
+   return previous==='0'?key:previous+key;
+  });
+  return <section className="balance-flow-screen topup-screen" data-prototype-screen="topup" role="dialog" aria-modal="true" aria-labelledby="topup-title" onClick={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Escape')backToDetails()}}>
+   <header className="balance-flow-header topup-header"><button type="button" aria-label="Назад" onClick={backToDetails}><ChevronLeft size={24}/></button><h2 id="topup-title">Пополнение</h2></header>
+   <form className="topup-form" onSubmit={event=>{event.preventDefault();if(!validAmount)return;onTopup(amountValue);setCreditedAmount(amountValue);backToDetails()}}>
+    <div className="topup-accounts">
+     <div className="topup-account topup-source"><img className="topup-card-image" src={paymentCard} alt=""/><span><small>С МТС Деньги ·· 4417</small><strong>32 587,56 ₽</strong></span><ChevronDown size={22} aria-hidden="true"/></div>
+     <div className="topup-account"><img className={"topup-service-image"+(serviceIndex===0?" troika-bevel":"")} src={logo} alt=""/><span><small>{index===2?'Мобильная связь':name}</small><strong>{destination}</strong></span></div>
+    </div>
+    <div className="topup-amount"><label className="topup-amount-input"><span className="sr-only">Сумма пополнения</span><input aria-label="Сумма пополнения" inputMode="none" value={amount} placeholder="0" style={{width:`${Math.max(1,amount.length)}ch`}} onChange={event=>setAmount(event.target.value.replace(/[^0-9,.]/g,'').replace('.',','))}/><span>₽</span></label></div>
+    <div className="topup-bottom"><div className="topup-chips" aria-label="Добавить к сумме">{[500,1000,2000,5000,10000].map(option=><button type="button" key={option} onClick={()=>setAmount(String(Math.min(1000000,Math.round((amountValue+option)*100)/100)).replace('.',','))}>+{rub(option)}</button>)}</div>
+     <div className="topup-keyboard"><div className="topup-key-grid">{['1','2','3','4','5','6','7','8','9',',','0','backspace'].map(key=><button type="button" key={key} aria-label={key==='backspace'?'Удалить цифру':key===','?'Запятая':key} onClick={()=>enterKey(key)}>{key==='backspace'?<img src={backspaceIcon} alt=""/>:key}</button>)}</div><button type="submit" className="topup-submit" disabled={!validAmount}>Пополнить</button></div>
+    </div>
+   </form>
+  </section>;
+ }
  if(screen!=='detail'){
-  const topup=screen==='topup';
+  const topup=false;
   const heading=topup?'Пополнение':'Сообщение о низком балансе';
   const amountValue=Number(amount);
   const thresholdValue=Number(threshold);
@@ -196,7 +222,7 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
   <div className="balance-service-tint" aria-hidden="true"><img src={logo} alt=""/></div>
   <div className="subscription-grabber"/>
   <button type="button" className="balance-service-close" aria-label="Закрыть" onClick={onClose}><img src={closeIcon} alt=""/></button>
-  <div className="balance-service-logo"><img src={logo} alt=""/></div>
+  <div className={"balance-service-logo"+(serviceIndex===0?" troika-bevel":"")}><img className={serviceIndex===0?'troika-emblem':''} src={logo} alt=""/></div>
   <h2>{title}</h2>
   <div className="balance-amount"><strong className={value<0?'negative':''}>{rub(value)}</strong></div>
  {showPreviewSuccess&&<div className="balance-success" role="status"><Check size={17}/>Пополнение выполнено</div>}

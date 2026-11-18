@@ -34,7 +34,7 @@ import imgBox20 from "../../assets/payments/f7607.svg?inline";
 import imgBox21 from "../../assets/payments/3fcdf.svg?inline";
 import imgBox22 from "../../assets/payments/996c6.svg?inline";
 
-export function PaymentsPaySection({overview,onWallet,shortcut,onLearn,horizontal}:{horizontal:boolean;overview:WalletOverview;shortcut:WalletShortcut;onLearn:(step?:number)=>void;onWallet:(tab?:'balances'|'subscriptions',card?:number,topup?:boolean,add?:ConnectionKind)=>void}) {
+export function PaymentsPaySection({overview,onWallet,shortcut,onLearn}:{overview:WalletOverview;shortcut:WalletShortcut;onLearn:(step?:number)=>void;onWallet:(tab?:'balances'|'subscriptions',card?:number,topup?:boolean,add?:ConnectionKind)=>void}) {
   const money=(value:number)=>value.toLocaleString('ru-RU')+' ₽';
   const activate=(action:()=>void)=>({role:'button',tabIndex:0,onClick:action,onKeyDown:(event:React.KeyboardEvent)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();action()}}});
 
@@ -174,25 +174,7 @@ export function PaymentsPaySection({overview,onWallet,shortcut,onLearn,horizonta
               </div>
             </div>
           </div>
-          <div className="content-stretch flex flex-col gap-[var(--8,8px)] items-start relative shrink-0 w-full" data-node-id="40009188:56658">
-            <button type="button" className="payments-wallet-balances" onClick={() => onWallet("balances")}>
-              <span className="payments-wallet-emblems" aria-hidden="true">
-                <span className="payments-wallet-emblem payments-wallet-emblem-white" style={{ zIndex: 3 }}><img src={imgBox2} alt="" /></span>
-                <span className="payments-wallet-emblem" style={{ zIndex: 2 }}><img src={walletParking} alt="" width={32} height={32} /></span>
-                <span className="payments-wallet-emblem payments-wallet-emblem-white"><img src={walletWifi} alt="" /></span>
-              </span>
-              <span>
-                <strong>Внешние балансы <small>{overview.balanceCount || null}</small></strong>
-                Карты, интернет, связь и парковки
-              </span>
-              {Boolean(overview.attentionCount) && (
-                <span className="balance-attention-badge" aria-label={overview.attentionCount === 1 ? "Один счёт требует внимания" : `${overview.attentionCount} счёта требуют внимания`}>
-                  {overview.attentionCount}
-                </span>
-              )}
-            </button>
-            {overview.balanceCount===0&&<button className="pay-wallet-learn" onClick={()=>onLearn(0)}>Как работают внешние балансы</button>}
-          </div>
+
         </div>
         <div className="content-stretch flex flex-col items-start pt-[var(--8,8px)] relative rounded-[var(--radius\/16,16px)] shrink-0 w-full" data-node-id="40009188:56081" data-name="Payments cells">
           <div className="content-stretch flex gap-[12px] items-center min-h-[52px] px-[20px] py-[10px] relative shrink-0 w-full" data-node-id="40009188:56082" data-name="Cell">

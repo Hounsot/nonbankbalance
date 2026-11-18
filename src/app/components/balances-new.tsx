@@ -5,7 +5,6 @@ import { balanceServiceLogo, type BalanceService, type ConnectionKind } from './
 import { BalanceOfferGrid } from './balance-offers';
 import warning from '../../assets/balances-new/978a1.svg?inline';
 import chevron from '../../assets/balances-new/9afb3.svg?inline';
-import pinnedTroika from '../../assets/balances-new/f00dd.svg?inline';
 import pinIcon from '../../assets/balances-new/864f9.svg?inline';
 import './balances-new.css';
 
@@ -23,7 +22,7 @@ export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,on
   {name:'Парковки России',note:'А 777 ВС 77',amount:balances[2].value,icon:balanceLogos[4],hidden:settings[4].hidden,type:'balance' as const,index:2},
   {...accountLabels.internet,amount:balances[1].value,icon:balanceLogos[3],hidden:settings[3].hidden,type:'balance' as const,index:1},
   ...balances.slice(3).map((balance, offset) => ({
-   name: balance.name, note: balance.note, amount: balance.value,
+   name: balance.service==='internet'?'Интернет':balance.service==='mobile'?'Мобильная связь':balance.name, note: balance.note, amount: balance.value,
    icon: balanceLogos[balanceServiceLogo(balance.service!)],
    hidden: settings[offset+5].hidden, type: 'balance' as const, index: offset+3,
   })),
@@ -31,7 +30,7 @@ export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,on
 
  const visibleRows=rows.filter(row=>!row.hidden);
  const accountIndex=(row:typeof rows[number])=>row.type==='card'?row.index:row.index+2;
- const isNeutral=(row:typeof rows[number])=>row.type==='balance'&&row.index===1;
+ const isNeutral=(row:typeof rows[number])=>row.icon===balanceLogos[3];
  const pinned=visibleRows.find(row=>accountIndex(row)===pinnedIndex);
  const automaticRows=visibleRows.filter(row=>settings[row.type==='card'?row.index:row.index+2].auto);
  const notifiedRows=visibleRows.filter(row=>settings[row.type==='card'?row.index:row.index+2].notify);
@@ -39,14 +38,14 @@ export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,on
  const attentionLabel=lowRows.length===1?'Один счёт требует внимания':`${lowRows.length} счёта требуют внимания`;
  const sheetTitle=overviewSheet==='pin'?'Закрепить баланс':overviewSheet==='autotopups'?'Автопополнения':overviewSheet==='balance-notifications'?'Уведомления':'Требует внимания';
  const sheetRows=overviewSheet==='attention'?lowRows:visibleRows;
- const renderRow=(row:typeof rows[number],onClick=()=>onOpen(row.type,row.index))=><button key={accountIndex(row)} className="bn-row" data-guide-added={accountIndex(row)===addedIndex?true:undefined} onClick={onClick}><span className={"bn-row-icon"+(isNeutral(row)?" bn-row-icon-neutral":"")}><img src={row.icon} alt=""/></span><span className="bn-row-info"><b>{row.name}</b><small>{row.note}</small></span><span className={row.amount<0?'bn-row-amount bn-negative':'bn-row-amount'}>{row.amount.toLocaleString('ru-RU')} ₽</span></button>;
+ const renderRow=(row:typeof rows[number],onClick=()=>onOpen(row.type,row.index))=><button key={accountIndex(row)} className="bn-row" data-guide-added={accountIndex(row)===addedIndex?true:undefined} onClick={onClick}><span className={"bn-row-icon"+(isNeutral(row)?" bn-row-icon-neutral":"")+(row.icon===balanceLogos[0]?" troika-bevel":"")}><img className={row.icon===balanceLogos[0]?'troika-emblem':''} src={row.icon} alt=""/></span><span className="bn-row-info"><b>{row.name}</b><small>{row.note}</small></span><span className={row.amount<0?'bn-row-amount bn-negative':'bn-row-amount'}>{row.amount.toLocaleString('ru-RU')} ₽</span></button>;
  return <div className="bn">
   <div className="bn-overview">
    <div className="bn-overview-grid">
     <div className="bn-overview-pin">
-     {pinned&&<img className={"bn-pin-icon"+(isNeutral(pinned)?" bn-pin-icon-neutral":pinned.icon===balanceLogos[2]?" bn-pin-icon-square":"")} src={pinned.type==='card'&&pinned.index===0?pinnedTroika:pinned.icon} alt=""/>}
-     <button className="bn-pin-select" type="button" onClick={()=>onOverviewSheet('pin')} aria-haspopup="dialog" aria-label={pinned?'Изменить закреплённый баланс':undefined}><img src={pinIcon} alt=""/>{!pinned&&'Закрепить баланс'}</button>
-     {pinned&&<button className="bn-pin-account" type="button" onClick={()=>onOpen(pinned.type,pinned.index)}><span>{pinned.name}{pinned.type==='card'?' '+pinned.note:''}</span><strong>{pinned.amount.toLocaleString('ru-RU')} ₽</strong></button>}
+     {pinned?<><img className={"bn-pin-icon"+(isNeutral(pinned)?" bn-pin-icon-neutral":pinned.icon===balanceLogos[0]||pinned.icon===balanceLogos[2]||pinned.icon===balanceLogos[4]?" bn-pin-icon-square":"")+(pinned.icon===balanceLogos[0]?" troika-bevel":"")} src={pinned.icon} alt=""/>
+     <button className="bn-pin-select" type="button" onClick={()=>onOverviewSheet('pin')} aria-haspopup="dialog" aria-label="Изменить закреплённый баланс"><img src={pinIcon} alt=""/></button>
+     <button className="bn-pin-account" type="button" onClick={()=>onOpen(pinned.type,pinned.index)}><span>{pinned.name}{pinned.type==='card'?' '+pinned.note:''}</span><strong>{pinned.amount.toLocaleString('ru-RU')} ₽</strong></button></>:<button className="bn-pin-empty" type="button" onClick={()=>visibleRows.length?onOverviewSheet('pin'):onAdd()} aria-haspopup="dialog"><span className="bn-pin-empty-icon"><img src={pinIcon} alt=""/></span><span className="bn-pin-empty-copy"><strong>Закрепить баланс</strong><small>{visibleRows.length?'Выберите для быстрого доступа':'Добавьте баланс для быстрого доступа'}</small></span></button>}
     </div>
     <button className="bn-auto-tile" type="button" onClick={()=>onOverviewSheet('autotopups')} aria-haspopup="dialog"><strong>Автопополнения</strong><small>{automaticRows.length? automaticRows.length+' подключено':'Настроить'}</small></button>
     <button className="bn-auto-tile" type="button" onClick={()=>onOverviewSheet('balance-notifications')} aria-haspopup="dialog">
@@ -59,7 +58,7 @@ export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,on
   </div>
   <section className="bn-list"><h2>Ваши балансы</h2>{visibleRows.map(row=>renderRow(row))}<button type="button" className="bn-row bn-row-add" onClick={onAdd}><span className="bn-row-icon bn-row-icon-neutral"><Plus size={24}/></span><span className="bn-row-info"><b>Добавить баланс</b><small>Карту или другой счёт</small></span></button></section>
 <section className="bn-offers"><h2>Ваши балансы в одном месте</h2><BalanceOfferGrid onSelect={onConnect}/><div className="bn-add-slot" aria-hidden="true"/></section>
-  {overviewSheet&&<WalletModal title={sheetTitle} onClose={onCloseOverview} description={
+  {overviewSheet&&<WalletModal compact title={sheetTitle} onClose={onCloseOverview} description={
     overviewSheet==='autotopups'&&automaticRows.length===0?'Выберите счёт для настройки автопополнения':
     overviewSheet==='balance-notifications'&&notifiedRows.length===0?'Выберите счёт для подключения уведомления':undefined
   }>

@@ -1,12 +1,13 @@
 import { WalletModal } from './wallet-modal';
 import { BalanceOfferGrid } from './balance-offers';
+import { FoundCheckbox } from './found-checkbox';
 import { TramFront, Radio, Wallet, Plus, ChevronRight, Smartphone, Wifi, ParkingCircle, Route } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { startingSubscriptions, type Subscription } from './subscription-detail';
 import './wallet-empty.css';
 export type BalanceService = "card" | "mobile" | "parking" | "internet" | "avtodor";
 export type ConnectionKind = BalanceService | "balance" | "subscription";
-export type FoundAccount = { name: string; note: string; icon: string; amount: number };
+export type FoundAccount = { name: string; note: string; icon: string; amount: number; index: number };
 export type NewBalance = { service: BalanceService; name: string; note: string; value: number };
 
 const services = {
@@ -38,14 +39,17 @@ function BalanceConnectionForm({ service, onAdd, onClose, initialNaming, onNamin
   const usesAccountNumber = isCard || isAvtodor;
   const digits = number.replace(/\D/g, "");
   const phone = digits.match(/^(?:[78])?(\d{3})(\d{3})(\d{2})(\d{2})$/);
-  const validNumber = usesAccountNumber ? /^\d{4,24}$/.test(digits) : phone !== null;
+  const validNumber = usesAccountNumber || service === 'internet' ? /^\d{4,24}$/.test(digits) : phone !== null;
   const label = isCard ? "Номер транспортной карты"
     : isAvtodor ? "Номер лицевого счёта"
-    : service === "internet" ? "Номер телефона, на который оформлен договор" : "Номер телефона";
+    : service === "internet" ? "Телефон или номер лицевого счёта" : "Номер телефона";
+  const description = isCard ? 'Номер указан на обратной стороне транспортной карты.'
+    : isAvtodor ? 'Укажите номер транспондера или лицевого счёта Автодора.'
+    : service === 'internet' ? 'Укажите номер телефона, к которому привязан интернет, или номер лицевого счёта.' : undefined;
 
   return (
     <WalletModal compact className="we-connect-modal" sharedHeight={sharedHeight} onMeasureHeight={onMeasureHeight} title={naming ? "Назовите карту" : services[service].name} onClose={onClose}>
-      <form className="we-manual" data-prototype-screen={`${service}/${naming?'name':'identifier'}`} onSubmit={event => {
+      <form className="we-manual we-balance-form" data-prototype-screen={`${service}/${naming?'name':'identifier'}`} onSubmit={event => {
         event.preventDefault();
         if (!validNumber) return;
         if (isCard && !naming) {
@@ -56,15 +60,15 @@ function BalanceConnectionForm({ service, onAdd, onClose, initialNaming, onNamin
         if (isCard && !name.trim()) return;
         onAdd({
           service,
-          name: isCard ? name.trim() : services[service].name,
-          note: usesAccountNumber ? `·· ${digits.slice(-4)}` : `+7 ${phone?.slice(1).join(" ")}`,
+          name: isCard ? name.trim() : service === 'internet' ? 'Интернет' : service === 'mobile' ? 'Мобильная связь' : services[service].name,
+          note: usesAccountNumber || (service === 'internet' && !phone) ? `·· ${digits.slice(-4)}` : `+7 ${phone?.slice(1).join(" ")}`,
           value: 0,
         });
       }}>
         {(!naming || initialNaming) && (
-          <label>{label}<input key="number" required type={usesAccountNumber ? "text" : "tel"} inputMode={usesAccountNumber ? "numeric" : "tel"} value={number} onChange={event => setNumber(event.target.value.replace(/[^\d+() .-]/g, ""))} placeholder={isCard ? "Введите номер карты" : isAvtodor ? "Введите номер счёта" : "+7 900 000 00 00"} maxLength={32} /></label>
+          <div className="we-astra-field"><label className="we-astra-input"><span>{label}</span><input key="number" required type={usesAccountNumber || service === 'internet' ? "text" : "tel"} inputMode={usesAccountNumber ? "numeric" : "tel"} value={number} onChange={event => setNumber(event.target.value.replace(/[^\d+() .-]/g, ""))} placeholder={label} maxLength={32} aria-describedby={description?'balance-field-description':undefined} /></label>{description&&<p id="balance-field-description" className="we-astra-description">{description}</p>}</div>
         )}
-        {naming && <label>Название карты<input key="name" required maxLength={60} value={name} onChange={event => setName(event.target.value)} placeholder="Например, Тройка" /></label>}
+        {naming && <label className="we-astra-input"><span>Название карты</span><input key="name" required maxLength={60} value={name} onChange={event => setName(event.target.value)} placeholder="Название карты" /></label>}
         <button type="submit" disabled={!validNumber || (naming && !name.trim())}>{isCard && !naming ? "Продолжить" : "Добавить"}</button>
         {naming && !initialNaming && <button type="button" className="we-back" onClick={() => { setNaming(false); onNamingChange?.(false); }}>Изменить номер</button>}
       </form>
@@ -73,8 +77,9 @@ function BalanceConnectionForm({ service, onAdd, onClose, initialNaming, onNamin
 }
 export function WalletEmpty({onAdd}:{onAdd:(kind:ConnectionKind)=>void}){return <section className="we-onboarding"><div className="we-illustration" aria-hidden="true"><span><Wallet size={30} strokeWidth={1.3}/></span><i><Plus size={16}/></i></div><h2>Соберите свой кошелёк</h2><p>Карты и внешние счета —<br/>всё, что вы пополняете и оплачиваете.</p><div className="we-start-options"><button onClick={()=>onAdd('card')}><span className="we-option-icon"><TramFront size={21}/></span><span><b>Транспортная карта</b><small>Проверяйте баланс и пополняйте за пару нажатий</small></span><ChevronRight size={15}/></button><button onClick={()=>onAdd('balance')}><span className="we-option-icon"><Wallet size={21}/></span><span><b>Внешний баланс</b><small>Телефон, домашний интернет или парковка</small></span><ChevronRight size={15}/></button></div></section>}
 export function WalletCategoryEmpty({kind,onAdd}:{kind:'balances'|'subscriptions';onAdd:(kind:ConnectionKind)=>void}){return <section className="we-category"><span className="we-category-icon">{kind==='balances'?<Wallet size={27} strokeWidth={1.4}/>:<Radio size={27} strokeWidth={1.4}/>}</span><h2>{kind==='balances'?'Балансы ещё не добавлены':'Подписок пока нет'}</h2><p>{kind==='balances'?'Добавьте карту или внешний счёт, чтобы видеть остаток и пополнять его здесь.':'Добавьте сервис, чтобы видеть регулярные расходы и получать напоминания о списаниях.'}</p><button onClick={()=>onAdd(kind==='balances'?'balance':'subscription')}><Plus size={15}/>{kind==='balances'?'Добавить баланс':'Добавить подписку'}</button></section>}
-export function WalletConnect({kind,onChoose,onKind,onClose,onCustom,onAddBalance,initialNaming,initialManual,foundAccounts=[],onAddFound,onNamingChange}:{initialNaming?:boolean;initialManual?:boolean;foundAccounts?:FoundAccount[];onAddFound?:()=>void;onNamingChange?:(naming:boolean)=>void;onAddBalance:(balance:NewBalance)=>void;kind:ConnectionKind|null;onCustom:(subscription:Subscription)=>void;onChoose:(kind:ConnectionKind,index:number)=>void;onKind:(kind:ConnectionKind)=>void;onClose:()=>void}){
+export function WalletConnect({kind,onChoose,onKind,onClose,onCustom,onAddBalance,initialNaming,initialManual,foundAccounts=[],onAddFound,onNamingChange}:{initialNaming?:boolean;initialManual?:boolean;foundAccounts?:FoundAccount[];onAddFound?:(selected:number[])=>void;onNamingChange?:(naming:boolean)=>void;onAddBalance:(balance:NewBalance)=>void;kind:ConnectionKind|null;onCustom:(subscription:Subscription)=>void;onChoose:(kind:ConnectionKind,index:number)=>void;onKind:(kind:ConnectionKind)=>void;onClose:()=>void}){
  const [manual,setManual]=useState(initialManual??false);
+ const [selectedFound,setSelectedFound]=useState<number[]>(()=>foundAccounts.map(account=>account.index));
  const [name,setName]=useState(''); const [price,setPrice]=useState(''); const [date,setDate]=useState('');
  const [sharedHeight,setSharedHeight]=useState(440);
  const measureHeight=useCallback((height:number)=>setSharedHeight(previous=>Math.max(previous,height)),[]);
@@ -86,12 +91,12 @@ export function WalletConnect({kind,onChoose,onKind,onClose,onCustom,onAddBalanc
    <div className="we-connect-list" data-prototype-screen={kind === 'balance' ? 'balance/choose-service' : 'choose-service'}>
     {foundAccounts.length > 0 && <div className="we-found">
      <strong>Нашли по вашему номеру</strong>
-     {foundAccounts.map(account => <div className="bn-row" key={account.name}>
+     {foundAccounts.map(account => <button type="button" className="bn-row we-found-choice" role="checkbox" aria-checked={selectedFound.includes(account.index)} key={account.name} onClick={()=>setSelectedFound(selected=>selected.includes(account.index)?selected.filter(index=>index!==account.index):[...selected,account.index])}>
       <span className="bn-row-icon"><img src={account.icon} alt=""/></span>
       <span className="bn-row-info"><b>{account.name}</b><small>{account.note}</small></span>
-      <span className={account.amount < 0 ? 'bn-row-amount bn-negative' : 'bn-row-amount'}>{account.amount.toLocaleString('ru-RU')} ₽</span>
-     </div>)}
-     <button type="button" className="we-found-add" onClick={onAddFound}>Добавить найденные счета</button>
+      <FoundCheckbox selected={selectedFound.includes(account.index)}/>
+     </button>)}
+     <button type="button" className="we-found-add" disabled={!selectedFound.length} onClick={()=>onAddFound?.(selectedFound)}>{selectedFound.length===foundAccounts.length?'Добавить все':'Добавить'}</button>
     </div>}
     <BalanceOfferGrid includeCards={kind !== 'balance'} onSelect={onKind}/>
    </div>

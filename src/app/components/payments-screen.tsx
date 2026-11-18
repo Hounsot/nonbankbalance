@@ -1,9 +1,11 @@
-import troikaTemplate from "../../assets/payments/wallet-troika.svg?inline";
+import paymentChevron from "../../assets/payments/afc79.svg?inline";
+import { balanceLogos } from "./balance-logos";
+import troikaTemplate from "../../assets/balances-new/troika-emblem.png";
 import type { WalletShortcut } from "./wallet-quick-payment";
 import { PaymentsPaySection } from "./payments-pay-section";
 import type { ConnectionKind } from "./wallet-empty";
 import type { WalletOverview } from "./payment-wallet-entries";
-import { useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import searchButton from "../../assets/payments/search-button.png?inline";
 import "./payments-screen.css";
 
@@ -30,7 +32,14 @@ import imgBox10 from "../../assets/payments/3fcdf.svg?inline";
 import imgBox11 from "../../assets/payments/df4de.svg?inline";
 import imgBox12 from "../../assets/payments/2e7c1.svg?inline";
 
-export function PaymentsScreen({onWallet,overview,shortcut,onLearn,horizontal}:{horizontal:boolean;shortcut:WalletShortcut;onLearn:(step?:number)=>void;onWallet:(tab?:'balances'|'subscriptions',card?:number,topup?:boolean,add?:ConnectionKind,subscription?:number)=>void;overview:WalletOverview}) {
+function BalanceText({children,variant='name'}:{children:string;variant?:'name'|'note'|'amount'|'negative'}) {
+ const ref=useRef<HTMLSpanElement>(null);
+ const [overflow,setOverflow]=useState(false);
+ useLayoutEffect(()=>{const el=ref.current;if(!el)return;let alive=true;const measure=()=>{if(alive)setOverflow(el.scrollWidth>el.clientWidth+1)};const observer=new ResizeObserver(measure);observer.observe(el);measure();document.fonts?.ready.then(measure);return()=>{alive=false;observer.disconnect()}},[children]);
+ return <span ref={ref} className={`payments-balance-text ${variant}${overflow?' has-overflow':''}`}>{children}</span>;
+}
+
+export function PaymentsScreen({onWallet,overview,shortcut,onLearn}:{shortcut:WalletShortcut;onLearn:(step?:number)=>void;onWallet:(tab?:'balances'|'subscriptions',card?:number,topup?:boolean,add?:ConnectionKind,subscription?:number)=>void;overview:WalletOverview}) {
  const searchRef=useRef<HTMLInputElement>(null);
   return (
     <div className="payments-screen"><div className="payments-scroll"><div className="bg-[var(--background\/lower,#f2f3f7)] border border-[var(--background\/stroke,rgba(188,195,208,0.5))] border-solid content-stretch flex flex-col gap-[12px] isolate items-start relative size-full" data-node-id="40002004:4934" data-name="Main Full">
@@ -118,7 +127,7 @@ export function PaymentsScreen({onWallet,overview,shortcut,onLearn,horizontal}:{
                   </div>
                 </div>
               </div>
-              {overview.hasTroika&&<button style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4,flexShrink:0}} onClick={()=>onWallet('balances',0)}><img src={troikaTemplate} width={52} height={36} alt="" style={{height:52,objectFit:'contain'}}/><span style={{fontFamily:'MTS Compact, Arial, sans-serif',fontSize:12,lineHeight:'16px',fontWeight:400,textAlign:'center',width:52}}>Тройка</span><span style={{fontFamily:'MTS Compact, Arial, sans-serif',fontSize:11,lineHeight:'16px',fontWeight:400,color:'#626c77'}}>{overview.troika.toLocaleString('ru-RU')} ₽</span></button>}
+              {overview.hasTroika&&<button style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4,flexShrink:0}} onClick={()=>onWallet('balances',0)}><img src={troikaTemplate} width={52} height={36} alt="" style={{height:52,objectFit:'cover',borderRadius:16}} className="troika-bevel"/><span style={{fontFamily:'MTS Compact, Arial, sans-serif',fontSize:12,lineHeight:'16px',fontWeight:400,textAlign:'center',width:52}}>Тройка</span><span style={{fontFamily:'MTS Compact, Arial, sans-serif',fontSize:11,lineHeight:'16px',fontWeight:400,color:'#626c77'}}>{overview.troika.toLocaleString('ru-RU')} ₽</span></button>}
               <div className="content-stretch flex flex-col gap-[var(--4,4px)] items-center relative shrink-0" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009" data-name="Icon Button Set Item Custom" role="button" tabIndex={0} aria-label="Мой телефон — открыть баланс" onClick={()=>overview.phoneBalance!==undefined?onWallet('balances',2):onWallet('balances',undefined,false,'balance')} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();overview.phoneBalance!==undefined?onWallet('balances',2):onWallet('balances',undefined,false,'balance')}}}>
                 <div className="content-stretch flex gap-[10px] items-start overflow-clip relative rounded-[16px] shrink-0" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009;40002043:4015" data-name="Item/Emblem w Stroke">
                   <div className="relative shrink-0 size-[52px]" data-node-id="I40002151:23299;66039:29419;40002043:7451;40002043:4009;40002043:4015;6695:12058" data-name="🔄Russia">
@@ -313,7 +322,8 @@ export function PaymentsScreen({onWallet,overview,shortcut,onLearn,horizontal}:{
           </div>
         </div>
       </div>
-      <PaymentsPaySection horizontal={horizontal} overview={overview} onWallet={onWallet} shortcut={shortcut} onLearn={onLearn}/>
+      <section className="payments-my-balances"><button className="payments-my-balances-head" onClick={()=>onWallet('balances')}><strong>Мои балансы</strong><img src={paymentChevron} alt="" aria-hidden="true"/></button><div className="payments-my-balances-list">{overview.items?.length?overview.items.map(item=><button key={item.index} className="payments-my-balance" onClick={()=>onWallet('balances',item.index)}><span className={"payments-my-balance-icon"+(item.icon===balanceLogos[3]?" is-neutral":"")+(item.icon===balanceLogos[0]?" troika-bevel":"")}><img src={item.icon} alt=""/></span><BalanceText>{item.name}</BalanceText><BalanceText variant="note">{item.note}</BalanceText><BalanceText variant={item.value<0?'negative':'amount'}>{item.value.toLocaleString('ru-RU')+' ₽'}</BalanceText></button>):<button className="payments-balances-empty" onClick={()=>onWallet('balances')}><span className="payments-balances-empty-icon" aria-hidden="true">+</span><span className="payments-balances-empty-copy"><strong>Добавить баланс</strong><small>Транспортные карты, связь и другие счета</small></span><span className="payments-balances-empty-action">Добавить</span></button>}</div></section>
+      <PaymentsPaySection overview={overview} onWallet={onWallet} shortcut={shortcut} onLearn={onLearn}/>
     </div></div></div>
   );
 }

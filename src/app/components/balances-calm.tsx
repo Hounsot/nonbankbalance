@@ -2,6 +2,7 @@ import type { WalletEntry } from "../prototype-route";
 import { BalancesNew, accountLabels } from "./balances-new";
 import { balanceLogos } from "./balance-logos";
 import { BalanceGuide } from "./balance-guide";
+import { FoundCheckbox } from "./found-checkbox";
 import { WalletConnect, balanceServiceLogo, type BalanceService, type ConnectionKind, type NewBalance } from "./wallet-empty";
 import type { WalletOverview } from "./payment-wallet-entries";
 import { BalanceDetail, balanceSettings, type BalanceSettings } from "./balance-detail";
@@ -22,11 +23,12 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const [connectStep,setConnectStep]=useState<Pick<WalletEntry,'naming'|'manual'>>({});
  const [connectionKind,setConnectionKind]=useState<ConnectionKind|null>(null);
  const [discoveryDismissed,setDiscoveryDismissed]=useState(false);
+ const [discoveredSelection,setDiscoveredSelection]=useState<number[]>([2,3]);
  const [guide,setGuide]=useState<'add'|'choose'|'form'|'name'|'added'|null>(null);
  const [addedIndex,setAddedIndex]=useState<number|null>(null);
  const rootRef=useRef<HTMLDivElement>(null);
  const scrollRef=useRef<HTMLDivElement>(null);
- const [pinnedIndex,setPinnedIndex]=useState<number|null>(0);
+ const [pinnedIndex,setPinnedIndex]=useState<number|null>(empty?null:0);
  const [addProgress,setAddProgress]=useState(0);
  const updateBottom=()=>{
   const el=scrollRef.current;
@@ -55,7 +57,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  }, [entry]);
  useLayoutEffect(()=>{updateBottom();const el=scrollRef.current;if(!el)return;const observer=new ResizeObserver(updateBottom);observer.observe(el);for(const child of el.children)observer.observe(child);return ()=>observer.disconnect()},[tab,allEmpty]);
  const [balances,setBalances]=useState(initial); const [cards,setCards]=useState([1340,480]);
- useEffect(()=>{onOverview?.({attentionCount:balances.filter((b,i)=>!accountSettings[i+2].hidden&&b.value<0).length,phoneBalance:accountSettings[2].hidden?undefined:balances[0].value,quickBalances:{troika:accountSettings[0].hidden?undefined:cards[0],social:accountSettings[1].hidden?undefined:cards[1],parking:accountSettings[4].hidden?undefined:balances[2].value},debt:balances.reduce((sum,b,i)=>sum+(accountSettings[i+2].hidden?0:Math.max(0,-b.value)),0),nextSubscription:subscriptions.map((s,index)=>({...s,index})).filter(s=>s.active&&!s.hidden).sort((a,b)=>a.days-b.days)[0],troika:accountSettings[0].hidden?0:cards[0],hasTroika:!accountSettings[0].hidden,subscriptionTotal,cards:cards.filter((_,i)=>!accountSettings[i].hidden),subscriptionCount,balanceCount:visibleBalanceCount,balanceTotal:cards.reduce((a,b,i)=>a+(accountSettings[i].hidden?0:b),0)+balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:b.value),0)})},[cards,balances,subscriptions,subscriptionTotal,subscriptionCount,accountSettings,onOverview]);
+ useEffect(()=>{onOverview?.({items:[{name:'Тройка',note:'·· 4328',value:cards[0]-440,icon:balanceLogos[0],index:0},{name:'Мобильная связь',note:accountLabels.mobile.note,value:balances[0].value+128,icon:balanceLogos[2],index:2},{name:'Интернет',note:accountLabels.internet.note,value:balances[1].value,icon:balanceLogos[3],index:3},{name:'Парковки России',note:'А 777 ВС 77',value:balances[2].value,icon:balanceLogos[4],index:4},...balances.slice(3).map((b,i)=>({name:b.name,note:b.note,value:b.value,icon:balanceLogos[balanceServiceLogo(b.service!)],index:i+5}))].filter(item=>!accountSettings[item.index]?.hidden),attentionCount:balances.filter((b,i)=>!accountSettings[i+2].hidden&&b.value<0).length,phoneBalance:accountSettings[2].hidden?undefined:balances[0].value,quickBalances:{troika:accountSettings[0].hidden?undefined:cards[0],social:accountSettings[1].hidden?undefined:cards[1],parking:accountSettings[4].hidden?undefined:balances[2].value},debt:balances.reduce((sum,b,i)=>sum+(accountSettings[i+2].hidden?0:Math.max(0,-b.value)),0),nextSubscription:subscriptions.map((s,index)=>({...s,index})).filter(s=>s.active&&!s.hidden).sort((a,b)=>a.days-b.days)[0],troika:accountSettings[0].hidden?0:cards[0],hasTroika:!accountSettings[0].hidden,subscriptionTotal,cards:cards.filter((_,i)=>!accountSettings[i].hidden),subscriptionCount,balanceCount:visibleBalanceCount,balanceTotal:cards.reduce((a,b,i)=>a+(accountSettings[i].hidden?0:b),0)+balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:b.value),0)})},[cards,balances,subscriptions,subscriptionTotal,subscriptionCount,accountSettings,onOverview]);
  const [sheet,setSheet]=useState<null|({type:string,index?:number} & Pick<WalletEntry,'topup'|'detailScreen'|'autoMode'|'topupSuccess'>)>(null);const [amount,setAmount]=useState(500);const [paid,setPaid]=useState(false);const [notifications,setNotifications]=useState(true);
  const open=(type:string,index?:number)=>{if(guide==='added')setGuide(null);setConnectStep({});setSheet({type,index});setPaid(false);setAmount(500)};
  const debt=balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:Math.max(0,-b.value)),0);const total=cards.reduce((a,b,i)=>a+(accountSettings[i].hidden?0:b),0)+balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:b.value),0);
@@ -63,6 +65,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const newAccounts=balances.map((balance,index)=>({...balance,value:balance.value+(index===0?128:0)}));
  const displayedCards=newCards;
  const displayedBalances=newAccounts;
+
  const detailIndex=(sheet?.index??0)+(sheet?.type==='balance'?2:0);
  const name=sheet?.type==='card' ? ['Тройка','Социальная карта'][sheet.index||0] : balances[sheet?.index||0].name;
  const addedBalance=sheet?.type==='balance'&&balances[sheet.index??0]?.service?balances[sheet.index??0]:undefined;
@@ -95,10 +98,10 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
     { ...accountLabels.internet, icon: balanceLogos[3], amount: displayedBalances[1].value, index: 3, service: 'internet' },
    ].filter(account => accountSettings[account.index].hidden && !balances.slice(3).some(balance => balance.service === account.service))
   : [];
- const addFoundAccounts = () => {
-  const indexes = new Set(foundAccounts.map(account => account.index));
+ const addFoundAccounts = (selected:number[]) => {
+  const indexes = new Set(selected);
   setAccountSettings(all => all.map((settings, index) => indexes.has(index) ? { ...settings, hidden: false } : settings));
-  setDiscoveryDismissed(false);
+  setDiscoveryDismissed(foundAccounts.some(account=>!indexes.has(account.index)));
   setSheet(null);
   setGuide(null);
  };
@@ -130,20 +133,21 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
   <h2 id="discovered-title">Нашли два счёта</h2>
   <p id="discovered-description">По вашему номеру телефона нашли мобильную связь и домашний интернет. Добавить их в раздел?</p>
   <div className="discovered-accounts">
-   {[{...accountLabels.mobile, icon:balanceLogos[2], amount:displayedBalances[0].value},
-     {...accountLabels.internet, icon:balanceLogos[3], amount:displayedBalances[1].value}].map(account=>
-    <div className="bn-row" key={account.name}>
+   {[{...accountLabels.mobile, icon:balanceLogos[2], index:2},
+     {...accountLabels.internet, icon:balanceLogos[3], index:3}].map(account=>
+    <button type="button" className="bn-row discovered-choice" role="checkbox" aria-checked={discoveredSelection.includes(account.index)} key={account.name} onClick={()=>setDiscoveredSelection(selected=>selected.includes(account.index)?selected.filter(index=>index!==account.index):[...selected,account.index])}>
      <span className="bn-row-icon"><img src={account.icon} alt=""/></span>
      <span className="bn-row-info"><b>{account.name}</b><small>{account.note}</small></span>
-     <span className={account.amount<0?'bn-row-amount bn-negative':'bn-row-amount'}>{money(account.amount)}</span>
-    </div>)}
+     <FoundCheckbox selected={discoveredSelection.includes(account.index)}/>
+    </button>)}
   </div>
   <div className="discovered-actions">
-   <button type="button" className="discovered-add" onClick={()=>{
-    setAccountSettings(all=>all.map((settings,index)=>index===2||index===3?{...settings,hidden:false}:settings));
+   <button type="button" className="discovered-add" disabled={!discoveredSelection.length} onClick={()=>{
+    setAccountSettings(all=>all.map((settings,index)=>discoveredSelection.includes(index)?{...settings,hidden:false}:settings));
+    setDiscoveryDismissed(discoveredSelection.length<2);
     setSheet(null);
     setGuide('add');
-   }}>Добавить</button>
+   }}>{discoveredSelection.length===2?'Добавить все':'Добавить'}</button>
   </div>
   </div>
  </section></div>}

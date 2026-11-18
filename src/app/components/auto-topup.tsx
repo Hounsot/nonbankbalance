@@ -46,7 +46,7 @@ export function AutoTopup({index,name,title,logo,settings,onBack,onSave,initialM
           <img src={paymentCard} alt=""/><span><small>с МТС Деньги ·· 4433</small><strong>32 587,56 ₽</strong></span><ChevronDown size={20}/>
         </button>
         {showCard&&<div className="auto-card-caption">МТС Деньги ·· 4433 — карта списания</div>}
-        <div className="auto-account"><img src={index===2?mts:logo} alt=""/><span><small>{index===2?'Мобильный телефон':name}</small><strong>{title}</strong></span></div>
+        <div className="auto-account"><img className={index===0?"troika-bevel":undefined} src={index===2?mts:logo} alt=""/><span><small>{index===2?'Мобильный телефон':name}</small><strong>{title}</strong></span></div>
         <div className="auto-fields">
           <label className="auto-field"><span>Название автопополнения</span><input value={label} onChange={event=>setLabel(event.target.value)} required/></label>
           <div className="auto-mode-label">Тип автопополнения</div>

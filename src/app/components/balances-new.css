@@ -97,6 +97,12 @@
 }
 .bn-overview-pin { position: relative; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; }
 .bn-pin-select { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #626c77; }
+.bn-pin-empty { display: flex; flex: 1; min-height: 0; width: 100%; flex-direction: column; align-items: flex-start; justify-content: space-between; text-align: left; }
+.bn-overview-grid .bn-pin-empty-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; background: #f2f3f7; }
+.bn-pin-empty-icon img { width: 20px; height: 20px; }
+.bn-pin-empty-copy strong, .bn-pin-empty-copy small { display: block; }
+.bn-pin-empty-copy strong { font-size: 14px; line-height: 18px; font-weight: 500; color: #1d2023; }
+.bn-pin-empty-copy small { margin-top: 4px; font-size: 14px; line-height: 18px; font-weight: 400; color: #626c77; }
 .bn-pin-account, .bn-auto-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .bn-overview-pin:has(.bn-pin-account) .bn-pin-select { align-self: flex-end; justify-content: center; width: 32px; height: 32px; border-radius: 10px; background: #f2f3f7; }
 .bn-pin-account { flex: 1; justify-content: flex-end; padding: 0; }
@@ -105,11 +111,18 @@
 .bn-auto-tile small { color: #626c77; font-size: 14px; line-height: 18px; font-weight: 400; }
 .bn-auto-tile { justify-content: space-between; }
 
-.bn-pin-icon { position: absolute; top: 16px; left: 16px; width: 52px; height: 36px; object-fit: contain; pointer-events: none; }
+.bn-pin-icon { position: absolute; top: 16px; left: 16px; width: 48px; height: 48px; object-fit: contain; pointer-events: none; }
 
 .bn-row-icon-neutral { background: #f2f3f7; }
 .bn-row-add .bn-row-icon { color: #8c959f; }
 .bn-row-icon-neutral img { width: 24px; height: 24px; }
-.bn-pin-icon-neutral { width: 36px; padding: 6px; border-radius: 12px; background: #f2f3f7; }
+.bn-pin-icon-neutral { width: 48px; padding: 8px; border-radius: 12px; background: #f2f3f7; }
 
-.bn-pin-icon-square { width: 36px; }
+.bn-pin-icon-square { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
+.new-balances .bn-row-icon, .new-balances .bn-pin-icon, .new-balances .balance-service-logo, .new-balances .balance-history-icon, .new-balances .topup-service-image, .new-balances .auto-account img { corner-shape: squircle; }
+.new-balances .bn-row-icon, .new-balances .balance-history-icon, .new-balances .topup-service-image { border-radius: 26px; }
+.new-balances .bn-pin-icon { border-radius: 18px; }
+.new-balances .balance-service-logo { border-radius: 56px; }
+.bn-row-icon img.troika-emblem { width: 100%; height: 100%; object-fit: cover; }
+.bn-offer img { object-fit: contain; object-position: right bottom; }
+.bn-offer.transport img { width: 120px; height: 120px; }
