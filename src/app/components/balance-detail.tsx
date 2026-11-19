@@ -159,7 +159,7 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
    <form className="topup-form" onSubmit={event=>{event.preventDefault();if(!validAmount)return;onTopup(amountValue);setCreditedAmount(amountValue);backToDetails()}}>
     <div className="topup-accounts">
      <div className="topup-account topup-source"><img className="topup-card-image" src={paymentCard} alt=""/><span><small>С МТС Деньги ·· 4417</small><strong>32 587,56 ₽</strong></span><ChevronDown size={22} aria-hidden="true"/></div>
-     <div className="topup-account"><img className={"topup-service-image"+(serviceIndex===0?" troika-bevel":"")} src={logo} alt=""/><span><small>{index===2?'Мобильная связь':name}</small><strong>{destination}</strong></span></div>
+     <div className="topup-account"><img className={"topup-service-image"+(serviceIndex===0?" troika-bevel":"")} src={logo} alt=""/><span><small>{serviceIndex===0?`${name} ${destination}`:index===2?'Мобильная связь':name}</small><strong>{serviceIndex===0?rub(value):destination}</strong></span></div>
     </div>
     <div className="topup-amount"><label className="topup-amount-input"><span className="sr-only">Сумма пополнения</span><input aria-label="Сумма пополнения" inputMode="none" value={amount} placeholder="0" style={{width:`${Math.max(1,amount.length)}ch`}} onChange={event=>setAmount(event.target.value.replace(/[^0-9,.]/g,'').replace('.',','))}/><span>₽</span></label></div>
     <div className="topup-bottom"><div className="topup-chips" aria-label="Добавить к сумме">{[500,1000,2000,5000,10000].map(option=><button type="button" key={option} onClick={()=>setAmount(String(Math.min(1000000,Math.round((amountValue+option)*100)/100)).replace('.',','))}>+{rub(option)}</button>)}</div>
@@ -231,8 +231,8 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
 
  </div>
  {index===0 && <TroikaAnalytics balance={value} />}
- {index===2 && <ServiceAnalytics title="Связь оплачена до 15 ноября" description="Тариф — 650 ₽ в месяц"/>}
- {index===3 && <ServiceAnalytics title="Следующее списание 15 ноября" description="Тариф — 750 ₽ в месяц"/>}
+ {serviceIndex===2 && <ServiceAnalytics title="Баланса хватит до ≈ 15 декабря" description="Тариф — 650 ₽ в месяц"/>}
+ {serviceIndex===3 && <ServiceAnalytics title="Баланса хватит до ≈ 15 декабря" description="Тариф — 750 ₽ в месяц"/>}
  {serviceIndex===4 && <ParkingAnalytics balance={value} />}
  <section className="balance-management" aria-label="Управление">
   <h3>Управление</h3>

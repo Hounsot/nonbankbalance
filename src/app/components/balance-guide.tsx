@@ -14,10 +14,11 @@ const content: Record<Step, { title: string; description: string }> = {
   added: { title: 'Баланс добавлен', description: 'Теперь он отображается в разделе «Ваши балансы».' },
 };
 
-export function BalanceGuide({ rootRef, step, onDismiss }: {
+export function BalanceGuide({ rootRef, step, onDismiss, empty = false }: {
   rootRef: RefObject<HTMLDivElement | null>;
   step: Step;
   onDismiss: () => void;
+  empty?: boolean;
 }) {
   const [area, setArea] = useState<Area | null>(null);
   const [phase, setPhase] = useState<'waiting' | 'visible' | 'leaving'>('waiting');
@@ -42,7 +43,7 @@ export function BalanceGuide({ rootRef, step, onDismiss }: {
     const root = rootRef.current;
     if (!root) return;
     const selector = step === 'added' ? '[data-guide-added]'
-      : step === 'add' ? '.calm-add-dock button'
+      : step === 'add' ? (empty ? '.bn-offers .bn-grid' : '.calm-add-dock button')
       : step === 'choose' ? '.wallet-modal .we-connect-list'
       : '.wallet-modal .we-manual';
     let observer: ResizeObserver | undefined;
@@ -77,7 +78,7 @@ export function BalanceGuide({ rootRef, step, onDismiss }: {
       root.removeEventListener('scroll', update, true);
       window.removeEventListener('resize', update);
     };
-  }, [rootRef, step]);
+  }, [rootRef, step, empty]);
 
   if (phase === 'waiting' || !area || area.width <= 0 || area.height <= 0) return null;
   const bubbleWidth = Math.min(300, area.containerWidth - 40);
@@ -86,7 +87,9 @@ export function BalanceGuide({ rootRef, step, onDismiss }: {
   const bubbleStyle = bubbleBelow
     ? { left: bubbleLeft, top: area.top + area.height + 8, width: bubbleWidth }
     : { left: bubbleLeft, bottom: area.containerHeight - area.top + 8, width: bubbleWidth };
-  const message = content[step];
+  const message = step === 'add' && empty
+    ? { title: 'Выберите, что добавить', description: 'Нажмите на нужную категорию, чтобы подключить первый баланс.' }
+    : content[step];
   return (
     <div className={`balance-guide ${phase === 'leaving' ? 'balance-guide-leaving' : 'balance-guide-intro'}`} role="region" aria-label="Подсказка по добавлению баланса">
       <svg className="balance-guide-dim" width={area.containerWidth} height={area.containerHeight} aria-hidden="true">

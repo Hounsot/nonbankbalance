@@ -55,6 +55,7 @@
 .balance-sheet-service .balance-history-row small { color: #626c77; font-size: 14px; line-height: 20px; }
 .balance-sheet-service .balance-history-row strong { font-size: 17px; }
 .balance-sheet-service .balance-history-icon { width: 52px; height: 52px; border-radius: 16px; background: #f2f3f7; flex: none; }
+.new-balances .balance-sheet-service .balance-history-icon { border-radius: 26px; corner-shape: squircle; }
 .balance-history-icon img { width: 24px; height: 24px; }
 
 .calm .balance-sheet-service .balance-pin-action {

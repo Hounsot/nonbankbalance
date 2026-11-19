@@ -90,7 +90,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
    scroller.scrollTop += offset - scroller.clientHeight / 2 + target.offsetHeight / 2;
   }
  }, [guide, balances.length]);
- const beginConnect=(kind:ConnectionKind)=>{setConnectionKind(kind);open('connect')};
+ const beginConnect=(kind:ConnectionKind)=>{setConnectionKind(kind);open('connect');if(guide==='add')setGuide('form')};
  const connect=(kind:ConnectionKind,index:number)=>{if(kind==='subscription'){setSubscriptions(all=>all.map((s,i)=>i===index?{...s,hidden:false,active:true}:s));setTab('subscriptions')}else{const key=kind==='card'?index:index+2;setAccountSettings(all=>all.map((s,i)=>i===key?{...s,hidden:false}:s));setTab('balances')}setSheet(null);scrollRef.current?.scrollTo({top:0})};
  const foundAccounts = discoveryDismissed
   ? [
@@ -118,11 +118,11 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  {header}
  <BalancesNew addedIndex={addedIndex} pinnedIndex={pinnedIndex} onPin={setPinnedIndex} overviewSheet={sheet?.type==='attention'||sheet?.type==='pin'||sheet?.type==='autotopups'||sheet?.type==='balance-notifications'?sheet.type:null} onOverviewSheet={open} onCloseOverview={()=>setSheet(null)} cards={displayedCards} balances={displayedBalances} settings={accountSettings} onOpen={(type,index)=>open(type,index)} onConnect={beginConnect} onAdd={()=>{setConnectionKind(null);open('connect')}}/>
  </div>
- <div className="calm-add-dock"><button style={{
+ {!allEmpty&&<div className="calm-add-dock"><button style={{
   width:`calc(${191*(1-addProgress)}px + ${100*addProgress}%)`,
   maxWidth:'100%',
   height:44+8*addProgress,
- }} onClick={()=>{setConnectionKind(tab==='subscriptions'?'subscription':null);open('connect');if(guide==='add')setGuide('choose')}}>Добавить баланс</button></div>
+ }} onClick={()=>{setConnectionKind(tab==='subscriptions'?'subscription':null);open('connect');if(guide==='add')setGuide('choose')}}>Добавить баланс</button></div>}
  {sheet&&['card','balance'].includes(sheet.type)&&<div className="bc-overlay" onClick={()=>setSheet(null)}><BalanceDetail accountNote={addedBalance?.note} serviceIndex={addedBalance?.service ? balanceServiceLogo(addedBalance.service) : undefined} pinned={pinnedIndex===detailIndex} onTogglePin={detailIndex===1?undefined:()=>setPinnedIndex(current=>current===detailIndex?null:detailIndex)} startTopup={sheet.topup} initialScreen={sheet.detailScreen} initialAutoMode={sheet.autoMode} previewSuccess={sheet.topupSuccess} key={sheet.type+sheet.index+!!sheet.topup} name={name} index={sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2} value={sheet.type==='card'?displayedCards[sheet.index||0]:displayedBalances[sheet.index||0].value} settings={accountSettings[sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2]} onHide={()=>{const key=sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2;setAccountSettings(all=>all.map((s,i)=>i===key?{...s,hidden:true}:s));setSheet(null)}} onClose={()=>setSheet(null)} onSettings={next=>setAccountSettings(all=>all.map((s,i)=>i===(sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2)?next:s))} onTopup={amount=>{const key=sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2;if(sheet.type==='card')setCards(all=>all.map((v,i)=>i===sheet.index?v+amount:v));else setBalances(all=>all.map((v,i)=>i===sheet.index?{...v,value:v.value+amount}:v));setAccountSettings(all=>all.map((s,i)=>i===key?{...s,history:[{amount,date:'Сегодня'},...s.history].slice(0,3)}:s))}}/></div>}
  {sheet?.type==='connect'&&<WalletConnect foundAccounts={foundAccounts} onAddFound={addFoundAccounts} onNamingChange={naming=>{if(guide==='form'||guide==='name')setGuide(naming?'name':'form')}} initialNaming={connectStep.naming} initialManual={connectStep.manual} onAddBalance={addBalance} onCustom={subscription=>{setSubscriptions(all=>[...all,subscription]);setTab('subscriptions');setSheet(null);setGuide(null)}} kind={connectionKind} onKind={kind=>{setConnectionKind(kind);if(guide==='choose')setGuide('form')}} onChoose={connect} onClose={()=>{setSheet(null);setGuide(null)}}/>}
  {sheet?.type==='discovered'&&<div className="bc-overlay discovered-overlay" onClick={()=>{setSheet(null);setDiscoveryDismissed(true);setGuide('add')}}>
@@ -136,7 +136,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
    {[{...accountLabels.mobile, icon:balanceLogos[2], index:2},
      {...accountLabels.internet, icon:balanceLogos[3], index:3}].map(account=>
     <button type="button" className="bn-row discovered-choice" role="checkbox" aria-checked={discoveredSelection.includes(account.index)} key={account.name} onClick={()=>setDiscoveredSelection(selected=>selected.includes(account.index)?selected.filter(index=>index!==account.index):[...selected,account.index])}>
-     <span className="bn-row-icon"><img src={account.icon} alt=""/></span>
+     <span className={'bn-row-icon'+(account.index===3?' bn-row-icon-neutral':'')}><img src={account.icon} alt=""/></span>
      <span className="bn-row-info"><b>{account.name}</b><small>{account.note}</small></span>
      <FoundCheckbox selected={discoveredSelection.includes(account.index)}/>
     </button>)}
@@ -156,6 +156,6 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  {sheet.type==='summary'&&<><h2>В одном месте</h2><p>На картах и счетах · {money(total)}<br/>С учётом задолженности {money(debt)}</p><h3>Регулярные платежи</h3><div className="bc-choice">Мобильная связь <b>650 ₽</b></div><div className="bc-choice">Домашний интернет <b>750 ₽</b></div><div className="bc-choice">Подписки <b>{money(subscriptionTotal)}</b></div><p>{money(1400+subscriptionTotal)} в месяц по текущим тарифам. Разовые поездки и парковки не включены.</p></>}
  {sheet.type==='notifications'&&<><h2>Уведомления</h2><p>О низком балансе и предстоящих списаниях</p><button className="bc-primary" onClick={()=>setNotifications(!notifications)}>{notifications?'Включены · выключить':'Выключены · включить'}</button></>}
  </section></div>}
- {guide && <BalanceGuide rootRef={rootRef} step={guide} onDismiss={()=>setGuide(null)}/>}
+ {guide && sheet?.type!=='discovered' && <BalanceGuide rootRef={rootRef} step={guide} empty={allEmpty} onDismiss={()=>setGuide(null)}/>}
  </div>
 }

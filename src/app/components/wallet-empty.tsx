@@ -22,6 +22,15 @@ export function balanceServiceLogo(service: BalanceService) {
   return services[service].logoIndex;
 }
 
+function formatIdentifier(value: string, service: BalanceService) {
+  const digits = value.replace(/\D/g, '');
+  if (service === 'card') return (digits.slice(0, 24).match(/.{1,4}/g) ?? []).join(' ');
+  if (service !== 'mobile' && service !== 'parking' && service !== 'internet') return value.replace(/[^\d+() .-]/g, '');
+  const local = (digits.startsWith('7') || digits.startsWith('8') ? digits.slice(1) : digits).slice(0, 10);
+  if (!local) return digits ? '+7 ' : '';
+  return '+7 ' + [local.slice(0, 3), local.slice(3, 6), local.slice(6, 8), local.slice(8, 10)].filter(Boolean).join(' ');
+}
+
 function BalanceConnectionForm({ service, onAdd, onClose, initialNaming, onNamingChange, sharedHeight, onMeasureHeight }: {
   service: BalanceService;
   initialNaming?: boolean;
@@ -32,6 +41,8 @@ function BalanceConnectionForm({ service, onAdd, onClose, initialNaming, onNamin
   onClose: () => void;
 }) {
   const [number, setNumber] = useState("");
+  const [numberFocused, setNumberFocused] = useState(false);
+  const [internetAccount, setInternetAccount] = useState(false);
   const [name, setName] = useState("");
   const [naming, setNaming] = useState(initialNaming ?? false);
   const isCard = service === "card";
@@ -39,16 +50,18 @@ function BalanceConnectionForm({ service, onAdd, onClose, initialNaming, onNamin
   const usesAccountNumber = isCard || isAvtodor;
   const digits = number.replace(/\D/g, "");
   const phone = digits.match(/^(?:[78])?(\d{3})(\d{3})(\d{2})(\d{2})$/);
-  const validNumber = usesAccountNumber || service === 'internet' ? /^\d{4,24}$/.test(digits) : phone !== null;
+  const validNumber = usesAccountNumber || internetAccount ? /^\d{4,24}$/.test(digits) : phone !== null;
   const label = isCard ? "Номер транспортной карты"
     : isAvtodor ? "Номер лицевого счёта"
-    : service === "internet" ? "Телефон или номер лицевого счёта" : "Номер телефона";
+    : internetAccount ? "Номер лицевого счёта" : "Номер телефона";
   const description = isCard ? 'Номер указан на обратной стороне транспортной карты.'
     : isAvtodor ? 'Укажите номер транспондера или лицевого счёта Автодора.'
     : service === 'internet' ? 'Укажите номер телефона, к которому привязан интернет, или номер лицевого счёта.' : undefined;
+  const mask = isCard ? '0000 0000 00' : isAvtodor ? '0000000000' : internetAccount ? '' : '+7 000 000 00 00';
+  const maskRemainder = numberFocused && number && mask && number.length < mask.length ? mask.slice(number.length) : '';
 
   return (
-    <WalletModal compact className="we-connect-modal" sharedHeight={sharedHeight} onMeasureHeight={onMeasureHeight} title={naming ? "Назовите карту" : services[service].name} onClose={onClose}>
+    <WalletModal compact className="we-connect-modal" sharedHeight={sharedHeight} onMeasureHeight={onMeasureHeight} title={naming ? "Назовите карту" : services[service].name} onClose={onClose} onBack={naming ? () => { setNaming(false); onNamingChange?.(false); } : undefined}>
       <form className="we-manual we-balance-form" data-prototype-screen={`${service}/${naming?'name':'identifier'}`} onSubmit={event => {
         event.preventDefault();
         if (!validNumber) return;
@@ -61,16 +74,15 @@ function BalanceConnectionForm({ service, onAdd, onClose, initialNaming, onNamin
         onAdd({
           service,
           name: isCard ? name.trim() : service === 'internet' ? 'Интернет' : service === 'mobile' ? 'Мобильная связь' : services[service].name,
-          note: usesAccountNumber || (service === 'internet' && !phone) ? `·· ${digits.slice(-4)}` : `+7 ${phone?.slice(1).join(" ")}`,
+          note: usesAccountNumber || internetAccount ? `·· ${digits.slice(-4)}` : `+7 ${phone?.slice(1).join(" ")}`,
           value: 0,
         });
       }}>
         {(!naming || initialNaming) && (
-          <div className="we-astra-field"><label className="we-astra-input"><span>{label}</span><input key="number" required type={usesAccountNumber || service === 'internet' ? "text" : "tel"} inputMode={usesAccountNumber ? "numeric" : "tel"} value={number} onChange={event => setNumber(event.target.value.replace(/[^\d+() .-]/g, ""))} placeholder={label} maxLength={32} aria-describedby={description?'balance-field-description':undefined} /></label>{description&&<p id="balance-field-description" className="we-astra-description">{description}</p>}</div>
+          <div className="we-astra-field"><label className="we-astra-input"><span>{label}</span><div className="we-masked-input">{maskRemainder && <div className="we-mask-hint" aria-hidden="true"><span>{number}</span>{maskRemainder}</div>}<input key="number" required type={usesAccountNumber || internetAccount ? "text" : "tel"} inputMode={usesAccountNumber || internetAccount ? "numeric" : "tel"} value={number} onFocus={()=>setNumberFocused(true)} onBlur={()=>setNumberFocused(false)} onChange={event => setNumber(internetAccount ? event.target.value.replace(/\D/g, '').slice(0, 24) : formatIdentifier(event.target.value, service))} placeholder={numberFocused && mask ? mask : label} maxLength={32} aria-describedby={description?'balance-field-description':undefined} /></div></label>{description&&<p id="balance-field-description" className="we-astra-description">{description}</p>}{service==='internet'&&<button type="button" className="we-identifier-switch" onClick={()=>{setInternetAccount(!internetAccount);setNumber('')}}>{internetAccount?'Указать номер телефона':'Указать лицевой счёт'}</button>}</div>
         )}
         {naming && <label className="we-astra-input"><span>Название карты</span><input key="name" required maxLength={60} value={name} onChange={event => setName(event.target.value)} placeholder="Название карты" /></label>}
         <button type="submit" disabled={!validNumber || (naming && !name.trim())}>{isCard && !naming ? "Продолжить" : "Добавить"}</button>
-        {naming && !initialNaming && <button type="button" className="we-back" onClick={() => { setNaming(false); onNamingChange?.(false); }}>Изменить номер</button>}
       </form>
     </WalletModal>
   );

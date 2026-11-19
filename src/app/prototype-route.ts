@@ -26,7 +26,7 @@ export function readPrototypeRoute(search: string) {
   const [page, section, action, service, step, mode] = (query.get('screen') ?? '').split('/');
   const empty = query.get('scenario') === 'empty';
   const entry: WalletEntry = { tab: section === 'subscriptions' ? 'subscriptions' : 'balances' };
-  const screen = page === 'home' || page === 'wallet' ? page : 'payments';
+  const screen = page === 'home' || page === 'wallet' ? page : !page && empty ? 'home' : 'payments';
   const onboardingMatch = /^step-([1-4])$/.exec(section ?? '');
   const onboarding = page === 'onboarding' && onboardingMatch ? Number(onboardingMatch[1]) - 1 : null;
 

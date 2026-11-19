@@ -1,8 +1,9 @@
 import { useId, useLayoutEffect, useRef, type ReactNode } from 'react';
 import closeIcon from '../../assets/balances-new/b1498.svg?inline';
+import { ChevronLeft } from 'lucide-react';
 import './wallet-modal.css';
 
-export function WalletModal({title,description,onClose,children,compact=false,className='',sharedHeight,onMeasureHeight}:{title:string;description?:string;onClose:()=>void;children:ReactNode;compact?:boolean;className?:string;sharedHeight?:number;onMeasureHeight?:(height:number)=>void}){
+export function WalletModal({title,description,onClose,onBack,children,compact=false,className='',sharedHeight,onMeasureHeight}:{title:string;description?:string;onClose:()=>void;onBack?:()=>void;children:ReactNode;compact?:boolean;className?:string;sharedHeight?:number;onMeasureHeight?:(height:number)=>void}){
   const titleId=useId();
   const descriptionId=useId();
   const sectionRef=useRef<HTMLElement>(null);
@@ -25,7 +26,8 @@ export function WalletModal({title,description,onClose,children,compact=false,cl
         <div className="wallet-modal-grabber" aria-hidden="true"/>
         <section ref={sectionRef} className={`wallet-modal${sharedHeight?' wallet-modal-shared-height':''}`} role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={description?descriptionId:undefined} onClick={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();onClose()}}}>
           <header className="wallet-modal-header">
-            <div className="wallet-modal-heading">
+            <div className={`wallet-modal-heading${onBack?' wallet-modal-heading-back':''}`}>
+              {onBack&&<button type="button" className="wallet-modal-back" aria-label="Назад" onClick={onBack}><ChevronLeft size={20}/></button>}
               <h2 id={titleId} className="wallet-modal-title">{title}</h2>
               <button type="button" className="wallet-modal-close" aria-label="Закрыть" autoFocus onClick={onClose}><img src={closeIcon} alt=""/></button>
             </div>

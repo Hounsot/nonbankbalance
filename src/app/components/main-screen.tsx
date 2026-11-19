@@ -12,8 +12,6 @@ import imgBox4 from "../../assets/home/9adf9.svg";
 import imgBox5 from "../../assets/home/dab16.svg";
 import imgImage from "../../assets/home/e06b6.png";
 import imgImage1 from "../../assets/home/2b83f.png";
-import imgCubik from "../../assets/home/8d666.png";
-import imgCubik1 from "../../assets/home/cda37.png";
 import imgImage2 from "../../assets/home/10f75.png";
 import imgImage3 from "../../assets/home/8499e.png";
 import imgImage4 from "../../assets/home/f945a.png";
@@ -482,12 +480,6 @@ export function MainScreen({ overview, onBalances }: { overview: WalletOverview;
               </div>
               <div className="content-stretch flex flex-[1_0_0] flex-col h-[140px] items-start max-h-[140px] min-h-[140px] min-w-0 relative">
                 <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--0,0px)] items-start min-h-px p-[var(--0,0px)] relative w-full">
-                  <div aria-hidden className="absolute inset-0 pointer-events-none">
-                    <div className="absolute inset-0 overflow-hidden">
-                      <img alt="" className="absolute left-[-32.69%] max-w-none size-[178.85%] top-[-32.69%]" src={imgCubik} />
-                    </div>
-                    <img alt="" className="absolute max-w-none object-cover size-full" src={imgCubik1} />
-                  </div>
                   <button type="button" onClick={onBalances} aria-label="Внешние балансы" className="bg-white text-left font-normal content-stretch flex flex-[1_0_0] flex-col items-start justify-between min-h-px p-4 relative rounded-[20px] w-full">
                     <div className="bg-[#f2f3f7] content-stretch flex items-start overflow-clip relative rounded-[16px] shrink-0">
                       <div className="relative shrink-0 size-[52px]">
