@@ -26,6 +26,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const [discoveredSelection,setDiscoveredSelection]=useState<number[]>([2,3]);
  const [guide,setGuide]=useState<'add'|'choose'|'form'|'name'|'added'|null>(null);
  const [addedIndex,setAddedIndex]=useState<number|null>(null);
+ const [cardAdded,setCardAdded]=useState(false);
  const rootRef=useRef<HTMLDivElement>(null);
  const scrollRef=useRef<HTMLDivElement>(null);
  const [pinnedIndex,setPinnedIndex]=useState<number|null>(empty?null:0);
@@ -59,7 +60,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const [balances,setBalances]=useState(initial); const [cards,setCards]=useState([1340,480]);
  useEffect(()=>{onOverview?.({items:[{name:'Тройка',note:'·· 4328',value:cards[0]-440,icon:balanceLogos[0],index:0},{name:'Мобильная связь',note:accountLabels.mobile.note,value:balances[0].value+128,icon:balanceLogos[2],index:2},{name:'Интернет',note:accountLabels.internet.note,value:balances[1].value,icon:balanceLogos[3],index:3},{name:'Парковки России',note:'А 777 ВС 77',value:balances[2].value,icon:balanceLogos[4],index:4},...balances.slice(3).map((b,i)=>({name:b.name,note:b.note,value:b.value,icon:balanceLogos[balanceServiceLogo(b.service!)],index:i+5}))].filter(item=>!accountSettings[item.index]?.hidden),attentionCount:balances.filter((b,i)=>!accountSettings[i+2].hidden&&b.value<0).length,phoneBalance:accountSettings[2].hidden?undefined:balances[0].value,quickBalances:{troika:accountSettings[0].hidden?undefined:cards[0],social:accountSettings[1].hidden?undefined:cards[1],parking:accountSettings[4].hidden?undefined:balances[2].value},debt:balances.reduce((sum,b,i)=>sum+(accountSettings[i+2].hidden?0:Math.max(0,-b.value)),0),nextSubscription:subscriptions.map((s,index)=>({...s,index})).filter(s=>s.active&&!s.hidden).sort((a,b)=>a.days-b.days)[0],troika:accountSettings[0].hidden?0:cards[0],hasTroika:!accountSettings[0].hidden,subscriptionTotal,cards:cards.filter((_,i)=>!accountSettings[i].hidden),subscriptionCount,balanceCount:visibleBalanceCount,balanceTotal:cards.reduce((a,b,i)=>a+(accountSettings[i].hidden?0:b),0)+balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:b.value),0)})},[cards,balances,subscriptions,subscriptionTotal,subscriptionCount,accountSettings,onOverview]);
  const [sheet,setSheet]=useState<null|({type:string,index?:number} & Pick<WalletEntry,'topup'|'detailScreen'|'autoMode'|'topupSuccess'>)>(null);const [amount,setAmount]=useState(500);const [paid,setPaid]=useState(false);const [notifications,setNotifications]=useState(true);
- const open=(type:string,index?:number)=>{if(guide==='added')setGuide(null);setConnectStep({});setSheet({type,index});setPaid(false);setAmount(500)};
+ const open=(type:string,index?:number)=>{setCardAdded(false);if(guide==='added')setGuide(null);setConnectStep({});setSheet({type,index});setPaid(false);setAmount(500)};
  const debt=balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:Math.max(0,-b.value)),0);const total=cards.reduce((a,b,i)=>a+(accountSettings[i].hidden?0:b),0)+balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:b.value),0);
  const newCards=[cards[0]-1340+900,cards[1]];
  const newAccounts=balances.map((balance,index)=>({...balance,value:balance.value+(index===0?128:0)}));
@@ -70,6 +71,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const name=sheet?.type==='card' ? ['Тройка','Социальная карта'][sheet.index||0] : balances[sheet?.index||0].name;
  const addedBalance=sheet?.type==='balance'&&balances[sheet.index??0]?.service?balances[sheet.index??0]:undefined;
  const addBalance=(balance:NewBalance)=>{
+  setCardAdded(balance.service==='card');
   const guided = guide==='form' || guide==='name';
   setAddedIndex(guided ? balances.length + 2 : null);
   setGuide(guided ? 'added' : null);
@@ -109,7 +111,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const service = sheet?.type === 'card'
   ? (sheet.index === 1 ? 'social-card' : 'troika')
   : addedBalance?.service ?? ['mobile', 'internet', 'parking'][sheet?.index ?? 0] ?? 'account';
- const walletScreen = ['wallet', tab, sheet?.type,
+ const walletScreen = ['wallet', tab, !sheet && cardAdded ? 'card-added' : sheet?.type,
   sheet?.type === 'card' || sheet?.type === 'balance' ? service : undefined,
   sheet?.type === 'subscription' ? sheet.index : undefined,
  ].filter(segment => segment !== undefined).join('/');
