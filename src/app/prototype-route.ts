@@ -11,6 +11,7 @@ export type WalletEntry = {
   add?: ConnectionKind;
   connect?: boolean;
   discovery?: boolean;
+  cardAdded?: boolean;
   subscription?: number;
   overview?: typeof overviewSheets[number];
   detailScreen?: DetailScreen;
@@ -31,6 +32,7 @@ export function readPrototypeRoute(search: string) {
   const onboarding = page === 'onboarding' && onboardingMatch ? Number(onboardingMatch[1]) - 1 : null;
 
   if (screen === 'wallet') {
+    if (action === 'card-added') entry.cardAdded = true;
     if (action === 'discovered') entry.discovery = true;
     if (action === 'card' && (service === 'troika' || service === 'social-card')) {
       entry.card = service === 'troika' ? 0 : 1;

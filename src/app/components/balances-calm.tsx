@@ -14,7 +14,7 @@ import './balances-calm.css';
 const initial: {name:string;note:string;value:number;service?:BalanceService}[] = [{name:'МТС', note:'·· 4218', value:56}, {name:'Домашний интернет',note:'МТС Home ·· 3341',value:-120}, {name:'Парковки Москвы',note:'А 777 ВС 77',value:520}];
 const money=(n:number)=>n.toLocaleString('ru-RU')+' ₽';
 export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boolean;onBack?:()=>void;entry?:WalletEntry;onOverview?:(overview:WalletOverview)=>void}){
- const [accountSettings,setAccountSettings]=useState<BalanceSettings[]>(()=>[...balanceSettings.map(s=>({...s,hidden:empty})), ...(entry?.sampleService?[{auto:false,notify:false,history:[]}]:[])]);
+ const [accountSettings,setAccountSettings]=useState<BalanceSettings[]>(()=>[...balanceSettings.map(s=>({...s,hidden:empty})), ...(entry?.sampleService||entry?.cardAdded?[{auto:false,notify:false,history:[]}]:[])]);
  const [subscriptions,setSubscriptions]=useState<Subscription[]>(()=>startingSubscriptions.map(s=>({...s,hidden:empty,active:!empty})));
  const subscriptionTotal=subscriptions.reduce((sum,s)=>sum+(s.active&&!s.hidden?s.price:0),0);
  const subscriptionCount=subscriptions.filter(s=>!s.hidden&&s.active).length;
@@ -26,7 +26,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const [discoveredSelection,setDiscoveredSelection]=useState<number[]>([2,3]);
  const [guide,setGuide]=useState<'add'|'choose'|'form'|'name'|'added'|null>(null);
  const [addedIndex,setAddedIndex]=useState<number|null>(null);
- const [cardAdded,setCardAdded]=useState(false);
+ const [cardAdded,setCardAdded]=useState(!!entry?.cardAdded);
  const rootRef=useRef<HTMLDivElement>(null);
  const scrollRef=useRef<HTMLDivElement>(null);
  const [pinnedIndex,setPinnedIndex]=useState<number|null>(empty?null:0);
@@ -57,7 +57,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
   scrollRef.current?.scrollTo({ top: 0 });
  }, [entry]);
  useLayoutEffect(()=>{updateBottom();const el=scrollRef.current;if(!el)return;const observer=new ResizeObserver(updateBottom);observer.observe(el);for(const child of el.children)observer.observe(child);return ()=>observer.disconnect()},[tab,allEmpty]);
- const [balances,setBalances]=useState(initial); const [cards,setCards]=useState([1340,480]);
+ const [balances,setBalances]=useState(()=>entry?.cardAdded?[...initial,{name:'Транспортная карта',note:'·· 4328',value:0,service:'card' as BalanceService}]:initial); const [cards,setCards]=useState([1340,480]);
  useEffect(()=>{onOverview?.({items:[{name:'Тройка',note:'·· 4328',value:cards[0]-440,icon:balanceLogos[0],index:0},{name:'Мобильная связь',note:accountLabels.mobile.note,value:balances[0].value+128,icon:balanceLogos[2],index:2},{name:'Интернет',note:accountLabels.internet.note,value:balances[1].value,icon:balanceLogos[3],index:3},{name:'Парковки России',note:'А 777 ВС 77',value:balances[2].value,icon:balanceLogos[4],index:4},...balances.slice(3).map((b,i)=>({name:b.name,note:b.note,value:b.value,icon:balanceLogos[balanceServiceLogo(b.service!)],index:i+5}))].filter(item=>!accountSettings[item.index]?.hidden),attentionCount:balances.filter((b,i)=>!accountSettings[i+2].hidden&&b.value<0).length,phoneBalance:accountSettings[2].hidden?undefined:balances[0].value,quickBalances:{troika:accountSettings[0].hidden?undefined:cards[0],social:accountSettings[1].hidden?undefined:cards[1],parking:accountSettings[4].hidden?undefined:balances[2].value},debt:balances.reduce((sum,b,i)=>sum+(accountSettings[i+2].hidden?0:Math.max(0,-b.value)),0),nextSubscription:subscriptions.map((s,index)=>({...s,index})).filter(s=>s.active&&!s.hidden).sort((a,b)=>a.days-b.days)[0],troika:accountSettings[0].hidden?0:cards[0],hasTroika:!accountSettings[0].hidden,subscriptionTotal,cards:cards.filter((_,i)=>!accountSettings[i].hidden),subscriptionCount,balanceCount:visibleBalanceCount,balanceTotal:cards.reduce((a,b,i)=>a+(accountSettings[i].hidden?0:b),0)+balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:b.value),0)})},[cards,balances,subscriptions,subscriptionTotal,subscriptionCount,accountSettings,onOverview]);
  const [sheet,setSheet]=useState<null|({type:string,index?:number} & Pick<WalletEntry,'topup'|'detailScreen'|'autoMode'|'topupSuccess'>)>(null);const [amount,setAmount]=useState(500);const [paid,setPaid]=useState(false);const [notifications,setNotifications]=useState(true);
  const open=(type:string,index?:number)=>{setCardAdded(false);if(guide==='added')setGuide(null);setConnectStep({});setSheet({type,index});setPaid(false);setAmount(500)};
