@@ -155,7 +155,6 @@ export function WalletOnboarding({ initialStep = 0, introMedia, onClose, onConne
             Далее
           </button>
         </div>
-        <span className="wo-indicator" aria-hidden="true"/>
       </footer>
     </section>
   );
