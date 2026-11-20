@@ -1,6 +1,5 @@
 import { WalletModal } from './wallet-modal';
 import { balanceLogos } from './balance-logos';
-import { Plus } from 'lucide-react';
 import { balanceServiceLogo, type BalanceService, type ConnectionKind } from './wallet-empty';
 import { BalanceOfferGrid } from './balance-offers';
 import warning from '../../assets/balances-new/978a1.svg?inline';
@@ -56,8 +55,8 @@ export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,on
    </div>
    {lowRows.length>0&&<button className="bn-status-banner" aria-haspopup="dialog" onClick={()=>onOverviewSheet('attention')}><img src={warning} alt=""/><span>{attentionLabel}</span><img src={chevron} alt=""/></button>}
   </div>
-  {visibleRows.length>0&&<section className="bn-list"><h2>Ваши балансы</h2>{visibleRows.map(row=>renderRow(row))}<button type="button" className="bn-row bn-row-add" onClick={onAdd}><span className="bn-row-icon bn-row-icon-neutral"><Plus size={24}/></span><span className="bn-row-info"><b>Добавить баланс</b><small>Карту или другой счёт</small></span></button></section>}
-<section className="bn-offers"><h2>Выберите, что добавить</h2><BalanceOfferGrid onSelect={onConnect}/>{visibleRows.length>0&&<div className="bn-add-slot" aria-hidden="true"/>}</section>
+  {visibleRows.length>0&&<section className="bn-list"><h2>Ваши балансы</h2>{visibleRows.map(row=>renderRow(row))}</section>}
+<section className="bn-offers"><h2>Выберите, что добавить</h2><BalanceOfferGrid onSelect={onConnect}/></section>
   {overviewSheet&&<WalletModal compact title={sheetTitle} onClose={onCloseOverview} description={
     overviewSheet==='autotopups'&&automaticRows.length===0?'Выберите счёт для настройки автопополнения':
     overviewSheet==='balance-notifications'&&notifiedRows.length===0?'Выберите счёт для подключения уведомления':undefined

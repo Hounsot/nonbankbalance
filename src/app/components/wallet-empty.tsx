@@ -110,7 +110,7 @@ export function WalletConnect({kind,onChoose,onKind,onClose,onCustom,onAddBalanc
      </button>)}
      <button type="button" className="we-found-add" disabled={!selectedFound.length} onClick={()=>onAddFound?.(selectedFound)}>{selectedFound.length===foundAccounts.length?'Добавить все':'Добавить'}</button>
     </div>}
-    <BalanceOfferGrid includeCards={kind !== 'balance'} onSelect={onKind}/>
+    <BalanceOfferGrid onSelect={onKind}/>
    </div>
   </WalletModal>;
  }

@@ -43,7 +43,7 @@ export function BalanceGuide({ rootRef, step, onDismiss, empty = false }: {
     const root = rootRef.current;
     if (!root) return;
     const selector = step === 'added' ? '[data-guide-added]'
-      : step === 'add' ? (empty ? '.bn-offers .bn-grid' : '.calm-add-dock button')
+      : step === 'add' ? '.bn-offers .bn-grid'
       : step === 'choose' ? '.wallet-modal .we-connect-list'
       : '.wallet-modal .we-manual';
     let observer: ResizeObserver | undefined;
@@ -87,8 +87,8 @@ export function BalanceGuide({ rootRef, step, onDismiss, empty = false }: {
   const bubbleStyle = bubbleBelow
     ? { left: bubbleLeft, top: area.top + area.height + 8, width: bubbleWidth }
     : { left: bubbleLeft, bottom: area.containerHeight - area.top + 8, width: bubbleWidth };
-  const message = step === 'add' && empty
-    ? { title: 'Выберите, что добавить', description: 'Нажмите на нужную категорию, чтобы подключить первый баланс.' }
+  const message = step === 'add'
+    ? { title: 'Выберите, что добавить', description: 'Нажмите на нужную категорию, чтобы подключить баланс.' }
     : content[step];
   return (
     <div className={`balance-guide ${phase === 'leaving' ? 'balance-guide-leaving' : 'balance-guide-intro'}`} role="region" aria-label="Подсказка по добавлению баланса">
