@@ -118,7 +118,7 @@
 .calm .balance-flow-footer button:disabled { opacity: .4; }
 .calm .balance-flow-footer .balance-flow-disable { min-height: 40px; color: #e63e00; background: transparent; }
 
-.calm .topup-screen { padding-top: 46px; }
+.calm .topup-screen { padding-top: 12px; }
 .topup-header { padding: 2px 20px; gap: 0; }
 .topup-header button { background: transparent; }
 .topup-header h2 { font: 500 17px/24px 'MTS Compact',Arial,sans-serif; }

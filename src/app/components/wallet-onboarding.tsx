@@ -136,10 +136,6 @@ export function WalletOnboarding({ initialStep = 0, introMedia, onClose, onConne
         }
       }}>
       {cover && <IntroVisual media={introMedia}/>}
-      <div className="wo-status" aria-hidden="true">
-        <span>9:41</span>
-        <span><img src={wifi} width={17} height={17} alt=""/><img src={signal} width={17} height={17} alt=""/><img src={battery} width={8} height={15} alt=""/></span>
-      </div>
       <div className="wo-content" key={step}>
         <header>
           <h1 id="wo-title" ref={heading} tabIndex={-1}>

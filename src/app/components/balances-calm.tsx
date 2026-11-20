@@ -14,7 +14,7 @@ import './balances-calm.css';
 const initial: {name:string;note:string;value:number;service?:BalanceService}[] = [{name:'МТС', note:'·· 4218', value:56}, {name:'Домашний интернет',note:'МТС Home ·· 3341',value:-120}, {name:'Парковки Москвы',note:'А 777 ВС 77',value:520}];
 const money=(n:number)=>n.toLocaleString('ru-RU')+' ₽';
 export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boolean;onBack?:()=>void;entry?:WalletEntry;onOverview?:(overview:WalletOverview)=>void}){
- const [accountSettings,setAccountSettings]=useState<BalanceSettings[]>(()=>[...balanceSettings.map(s=>({...s,hidden:empty})), ...(entry?.sampleService||entry?.cardAdded?[{auto:false,notify:false,history:[]}]:[])]);
+ const [accountSettings,setAccountSettings]=useState<BalanceSettings[]>(()=>[...balanceSettings.map((s,i)=>({...s,hidden:empty,...(entry?.autoTopupConnected&&i===(entry.card??0)?{auto:true,autoMode:'balance' as const,autoThreshold:200,autoAmount:500}:{})})), ...(entry?.sampleService||entry?.cardAdded?[{auto:false,notify:false,history:[]}]:[])]);
  const [subscriptions,setSubscriptions]=useState<Subscription[]>(()=>startingSubscriptions.map(s=>({...s,hidden:empty,active:!empty})));
  const subscriptionTotal=subscriptions.reduce((sum,s)=>sum+(s.active&&!s.hidden?s.price:0),0);
  const subscriptionCount=subscriptions.filter(s=>!s.hidden&&s.active).length;

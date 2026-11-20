@@ -45,24 +45,6 @@ export function PaymentsScreen({onWallet,overview,shortcut,onLearn}:{shortcut:Wa
     <div className="payments-screen"><div className="payments-scroll"><div className="bg-[var(--background\/lower,#f2f3f7)] border border-[var(--background\/stroke,rgba(188,195,208,0.5))] border-solid content-stretch flex flex-col gap-[12px] isolate items-start relative size-full" data-node-id="40002004:4934" data-name="Main Full">
       <div className="content-stretch flex flex-col items-start relative shrink-0 z-[3]" data-node-id="40002151:23297" data-name="Navbar + card content">
         <div className="bg-[var(--background\/primary-elevated,white)] content-stretch flex flex-col items-end overflow-clip relative shrink-0 w-full" data-node-id="40002151:23298" data-name="Navbar 2.0.1">
-          <div className="content-stretch flex h-[44px] items-center justify-between max-h-[44px] min-h-[44px] pb-[8px] pt-[12px] px-[24px] relative shrink-0 w-full" data-node-id="I40002151:23298;91207:220222" data-name="Status Bar">
-            <div className="content-stretch flex h-[24px] items-center relative shrink-0" data-node-id="I40002151:23298;91207:220222;95459:27187" data-name="Time">
-              <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[21px] not-italic relative shrink-0 text-[12px] text-[color:var(--icons\/primary,#1d2023)] tracking-[-0.32px] whitespace-nowrap" data-node-id="I40002151:23298;91207:220222;95459:27188">
-                12:38
-              </p>
-            </div>
-            <div className="content-stretch flex gap-[6px] h-[24px] items-center relative shrink-0" data-node-id="I40002151:23298;91207:220222;95459:30200" data-name="Icons">
-              <div className="relative shrink-0 size-[14px]" data-node-id="I40002151:23298;91207:220222;95459:30201" data-name="network_wifi_3_bar_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24">
-                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgNetworkWifi3Bar24DpE3E3E3Fill0Wght400Grad0Opsz24} />
-              </div>
-              <div className="relative shrink-0 size-[14px]" data-node-id="I40002151:23298;91207:220222;95459:30203" data-name="network_cell_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24">
-                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgNetworkCell24DpE3E3E3Fill0Wght400Grad0Opsz24} />
-              </div>
-              <div className="relative shrink-0 size-[14px]" data-node-id="I40002151:23298;91207:220222;95459:30205" data-name="battery_5_bar_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24">
-                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgBattery5Bar24DpE3E3E3Fill0Wght400Grad0Opsz24} />
-              </div>
-            </div>
-          </div>
           <div className="content-stretch flex flex-col gap-[var(--8,8px)] items-start pb-[var(--16,16px)] pt-[var(--12,12px)] relative shrink-0 w-full" data-node-id="I40002151:23298;91207:227847" data-name="Container">
             <div className="content-stretch flex gap-[var(--16,16px)] items-center max-h-[44px] min-h-[44px] px-[var(--20,20px)] py-[6px] relative shrink-0 w-full" data-node-id="I40002151:23298;89276:9139" data-name="Content">
               <div className="[word-break:break-word] flex flex-[1_0_0] flex-col font-['MTS_Wide:Medium'] justify-end leading-[0] min-w-px not-italic overflow-hidden relative text-[24px] text-[color:var(--text\/primary,#1d2023)] text-ellipsis whitespace-nowrap" data-node-id="I40002151:23298;89276:9140">

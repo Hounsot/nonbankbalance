@@ -217,7 +217,7 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
    </form>
   </section>
  }
- return <section className="subscription-sheet balance-sheet balance-sheet-service" data-prototype-screen={(creditedAmount!==null||showPreviewSuccess)?'topup-success':'details'} role="dialog" aria-modal="true" aria-label={name} onClick={e=>e.stopPropagation()} onKeyDown={e=>{if(e.key==='Escape')onClose()}}>
+ return <section className="subscription-sheet balance-sheet balance-sheet-service" data-prototype-screen={(creditedAmount!==null||showPreviewSuccess)?'topup-success':serviceIndex===0&&settings.auto?'auto-topup-connected':'details'} role="dialog" aria-modal="true" aria-label={name} onClick={e=>e.stopPropagation()} onKeyDown={e=>{if(e.key==='Escape')onClose()}}>
  <div className={"balance-service-header"+(neutral?" balance-service-neutral":"")}>
   <div className="balance-service-tint" aria-hidden="true"><img src={logo} alt=""/></div>
   <div className="subscription-grabber"/>

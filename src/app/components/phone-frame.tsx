@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export function PhoneFrame({ children, label, showStatus=true }: { children: ReactNode; label?: string; showStatus?:boolean }) {
+export function PhoneFrame({ children, label }: { children: ReactNode; label?: string }) {
   return (
     <div className="flex flex-col items-center gap-4">
       <div
@@ -19,25 +19,6 @@ export function PhoneFrame({ children, label, showStatus=true }: { children: Rea
               "inset 0 0 0 2px #e1e1e5, inset 0 0 0 3px rgba(255,255,255,0.05)",
           }}
         >
-          {showStatus&&<div className="absolute top-0 left-0 right-0 z-30 grid grid-cols-[1fr_auto_1fr] items-center px-8 pt-3.5 text-[#202024]">
-            <span style={{ fontSize: "15px", fontWeight: 600, letterSpacing: "-0.01em" }}>9:41</span>
-            <div className="w-[108px] h-[33px] rounded-full" style={{ background: "#000" }} />
-            <div className="flex items-center justify-self-end gap-1.5">
-              <svg width="17" height="11" viewBox="0 0 17 11" fill="none">
-                <path d="M1 7.5L1 9.5M4.5 5.5L4.5 9.5M8 3.5L8 9.5M11.5 1.5L11.5 9.5" stroke="#202024" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
-              <svg width="16" height="11" viewBox="0 0 16 11" fill="none">
-                <path d="M8 3.5C9.5 3.5 11 4 12 5M8 0.5C10.5 0.5 13 1.5 14.5 3M8 6.5C8.8 6.5 9.5 6.8 10 7.3" stroke="#202024" strokeWidth="1.3" strokeLinecap="round" opacity="0.95"/>
-                <circle cx="8" cy="9.5" r="1.2" fill="#202024"/>
-              </svg>
-              <svg width="26" height="11" viewBox="0 0 26 11" fill="none">
-                <rect x="0.5" y="0.5" width="21" height="10" rx="2.5" stroke="#202024" opacity="0.5"/>
-                <rect x="2" y="2" width="18" height="7" rx="1.2" fill="#202024"/>
-                <rect x="22.5" y="3.5" width="1.5" height="4" rx="0.6" fill="#202024" opacity="0.5"/>
-              </svg>
-            </div>
-          </div>
-          }
           {children}
           <div aria-hidden="true" className="prototype-home-indicator" />
         </div>

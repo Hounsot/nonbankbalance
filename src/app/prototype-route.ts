@@ -17,6 +17,7 @@ export type WalletEntry = {
   detailScreen?: DetailScreen;
   autoMode?: AutoMode;
   topupSuccess?: boolean;
+  autoTopupConnected?: boolean;
   naming?: boolean;
   manual?: boolean;
   sampleService?: BalanceService;
@@ -50,6 +51,7 @@ export function readPrototypeRoute(search: string) {
         if (mode === 'monthly' || mode === 'balance' || mode === 'constant') entry.autoMode = mode;
       }
       entry.topupSuccess = step === 'topup-success';
+      entry.autoTopupConnected = step === 'auto-topup-connected';
     }
     if (action === 'connect') {
       entry.connect = true;

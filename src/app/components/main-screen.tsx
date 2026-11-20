@@ -305,24 +305,7 @@ export function MainScreen({ overview, onBalances }: { overview: WalletOverview;
       <div className="home-scroll">
         <img className="home-background" src={homeBackground} alt="" />
         <div className="relative w-full shrink-0">
-          <div className="content-stretch flex h-[44px] items-center justify-between max-h-[44px] min-h-[44px] pb-[8px] pt-[12px] px-[24px] relative shrink-0 w-full">
-            <div className="content-stretch flex h-[24px] items-center relative shrink-0">
-              <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[21px] not-italic relative shrink-0 text-[12px] text-[color:#fafafa] tracking-[-0.32px] whitespace-nowrap">
-                12:38
-              </p>
-            </div>
-            <div className="content-stretch flex gap-[6px] h-[24px] items-center relative shrink-0">
-              <div className="relative shrink-0 size-[14px]">
-                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgNetworkWifi3Bar24DpE3E3E3Fill0Wght400Grad0Opsz24} />
-              </div>
-              <div className="relative shrink-0 size-[14px]">
-                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgNetworkCell24DpE3E3E3Fill0Wght400Grad0Opsz24} />
-              </div>
-              <div className="relative shrink-0 size-[14px]">
-                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgBattery5Bar24DpE3E3E3Fill0Wght400Grad0Opsz24} />
-              </div>
-            </div>
-          </div>
+
           <div className="content-stretch flex gap-[var(--4,4px)] items-center pb-[var(--12,12px)] pt-[var(--8,8px)] px-[var(--20,20px)] relative shrink-0 w-full">
             <div className="backdrop-blur-[20px] bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.28)] border-solid content-stretch flex items-center justify-center p-[10px] relative rounded-[var(--44,16px)] shrink-0">
               <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0">
