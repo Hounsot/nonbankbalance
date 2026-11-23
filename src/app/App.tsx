@@ -11,6 +11,7 @@ import { PhoneFrame } from './components/phone-frame';
 import './components/wallet-light.css';
 import { usePrototypeUrl } from './prototype-url';
 import { readPrototypeRoute, type WalletEntry } from './prototype-route';
+import './components/safari-layout.css';
 export default function App(){
  const rootRef=useRef<HTMLElement>(null);
  usePrototypeUrl(rootRef);
@@ -35,8 +36,9 @@ export default function App(){
  },[]);
  const [overview,setOverview]=useState<WalletOverview>({troika:1340,subscriptionTotal:3637,cards:[1340,480],subscriptionCount:4,balanceTotal:2276,attentionCount:1,balanceCount:5,hasTroika:true,debt:120});
  const openWallet=(tab:'balances'|'subscriptions'='balances',card?:number,topup?:boolean,add?:ConnectionKind,subscription?:number)=>{if(screen!=='wallet')setWalletOrigin(screen);if(empty&&!onboardingSeen&&!add){setOnboarding(0);return}setEntry({tab,card,topup,add,subscription});setScreen('wallet')};
- return <main ref={rootRef} data-prototype-page={screen} data-prototype-scenario={empty?'empty':'filled'} style={{background:'#242426',height:'100dvh',width:'100%',boxSizing:'border-box',paddingTop:'env(safe-area-inset-top)',paddingBottom:'env(safe-area-inset-bottom)'}}>
+ const scrollPage = screen !== 'wallet' && onboarding === null;
+ return <main ref={rootRef} data-prototype-page={screen} data-prototype-scenario={empty?'empty':'filled'} className={scrollPage?'prototype-page-scroll':'prototype-page-fixed'} style={{background:'#242426',height:scrollPage?'auto':'100dvh',minHeight:'100dvh',width:'100%',boxSizing:'border-box',paddingTop:scrollPage?0:'env(safe-area-inset-top)',paddingBottom:scrollPage?0:'env(safe-area-inset-bottom)'}}>
 
- <div className="flex justify-center" style={{height:'100%'}}><PhoneFrame><div data-prototype-inactive={screen!=='wallet'||onboarding!==null?true:undefined} style={{height:"100%",display:screen==='wallet'?"block":"none"}}><BalancesCalm key={String(empty)} empty={empty} entry={entry} onOverview={setOverview} onBack={()=>setScreen(walletOrigin)}/></div>{screen==='payments'&&<PaymentsScreen onWallet={openWallet} overview={overview} shortcut={shortcut} onLearn={(step=0)=>{setWalletOrigin('payments');setOnboarding(step)}}/>}{screen==='home'&&<MainScreen overview={overview} onBalances={()=>openWallet()}/>}{screen!=='wallet'&&onboarding===null&&<BankingTabBar active={screen} onChange={setScreen}/>} {onboarding!==null&&<WalletOnboarding key={onboarding} initialStep={onboarding} onClose={()=>{setOnboarding(null);setOnboardingSeen(true)}} onConnect={()=>{setOnboarding(null);setOnboardingSeen(true);setEntry({tab:'balances',discovery:true});setScreen('wallet')}}/>}</PhoneFrame></div>
+ <div className="flex justify-center" style={{height:scrollPage?'auto':'100%'}}><PhoneFrame scrollPage={scrollPage}><div data-prototype-inactive={screen!=='wallet'||onboarding!==null?true:undefined} style={{height:"100%",display:screen==='wallet'?"block":"none"}}><BalancesCalm key={String(empty)} empty={empty} entry={entry} onOverview={setOverview} onBack={()=>setScreen(walletOrigin)}/></div>{screen==='payments'&&<PaymentsScreen onWallet={openWallet} overview={overview} shortcut={shortcut} onLearn={(step=0)=>{setWalletOrigin('payments');setOnboarding(step)}}/>}{screen==='home'&&<MainScreen overview={overview} onBalances={()=>openWallet()}/>}{screen!=='wallet'&&onboarding===null&&<BankingTabBar active={screen} onChange={setScreen}/>} {onboarding!==null&&<WalletOnboarding key={onboarding} initialStep={onboarding} onClose={()=>{setOnboarding(null);setOnboardingSeen(true)}} onConnect={()=>{setOnboarding(null);setOnboardingSeen(true);setEntry({tab:'balances',discovery:true});setScreen('wallet')}}/>}</PhoneFrame></div>
  </main>
 }

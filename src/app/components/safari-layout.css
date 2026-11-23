@@ -1,0 +1,22 @@
+.prototype-page-scroll .home-screen,
+.prototype-page-scroll .payments-screen {
+  height: auto;
+  min-height: 100dvh;
+  overflow: visible;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.prototype-page-scroll .home-scroll,
+.prototype-page-scroll .payments-scroll {
+  height: auto;
+  overflow: visible;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+}
+
+.prototype-page-scroll .banking-tab-bar {
+  position: fixed;
+  inset: auto 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  width: calc(100% - 24px);
+  max-width: 416px;
+  margin: 0 auto;
+}
