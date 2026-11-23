@@ -65,6 +65,9 @@
 .discovered-modal .discovered-accounts { gap: 0; }
 .discovered-modal .bn-row { min-height: 72px; padding: 10px 0; }
 .discovered-modal .bn-row-icon, .discovered-modal .bn-row-icon img { width: 52px; height: 52px; }
-.discovered-modal .bn-row-icon { border-radius: 26px; }
+.discovered-modal .bn-row-icon { border-radius: 16px; }
+@supports (corner-shape: squircle) {
+  .discovered-modal .bn-row-icon { border-radius: 26px; }
+}
 .discovered-modal .bn-row-icon-neutral img { width: 24px; height: 24px; }
 .discovered-modal .discovered-actions { margin-top: 16px; }

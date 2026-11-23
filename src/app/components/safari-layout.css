@@ -20,3 +20,21 @@
   max-width: 416px;
   margin: 0 auto;
 }
+
+/* iOS WebKit uses the original rounded corners for service icons. */
+@supports (-webkit-touch-callout: none) {
+  .new-balances .bn-row-icon,
+  .new-balances .discovered-modal .bn-row-icon,
+  .new-balances .balance-sheet-service .balance-history-icon,
+  .new-balances .topup-service-image {
+    border-radius: 16px;
+    corner-shape: round;
+  }
+
+  .new-balances .bn-pin-icon-square { border-radius: 10px; corner-shape: round; }
+  .new-balances .bn-pin-icon-neutral { border-radius: 12px; corner-shape: round; }
+  .new-balances .balance-service-logo { border-radius: 32px; corner-shape: round; }
+  .new-balances .auto-account img { corner-shape: round; }
+  .payments-screen .payments-my-balance-icon,
+  .payments-screen .payments-my-balance-plus { border-radius: 10px; corner-shape: round; }
+}
