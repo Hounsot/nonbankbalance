@@ -463,7 +463,7 @@ export function MainScreen({ overview, onBalances }: { overview: WalletOverview;
               </div>
               <div className="content-stretch flex flex-[1_0_0] flex-col h-[140px] items-start max-h-[140px] min-h-[140px] min-w-0 relative">
                 <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--0,0px)] items-start min-h-px p-[var(--0,0px)] relative w-full">
-                  <button type="button" onClick={onBalances} aria-label="Внешние балансы" className="bg-white text-left font-normal content-stretch flex flex-[1_0_0] flex-col items-start justify-between min-h-px p-4 relative rounded-[20px] w-full">
+                  <button type="button" onClick={onBalances} aria-label="Мои балансы" className="bg-white text-left font-normal content-stretch flex flex-[1_0_0] flex-col items-start justify-between min-h-px p-4 relative rounded-[20px] w-full">
                     <div className="bg-[#f2f3f7] content-stretch flex items-start overflow-clip relative rounded-[16px] shrink-0">
                       <div className="relative shrink-0 size-[52px]">
                         <img alt="" className="absolute block inset-0 max-w-none size-full" height="52" src={imgImage2} width="52" />
@@ -472,7 +472,7 @@ export function MainScreen({ overview, onBalances }: { overview: WalletOverview;
                     <div className="[word-break:break-word] content-stretch flex flex-col gap-[var(--0,0px)] h-[40px] items-start justify-end leading-[20px] not-italic p-[var(--0,0px)] relative shrink-0 w-full whitespace-nowrap">
                       <div className="content-stretch flex font-['MTS_Compact:Regular'] gap-[var(--4,4px)] items-center relative shrink-0 text-[14px] w-full">
                         <p className="overflow-hidden relative shrink-0 text-[color:#1d2023] text-ellipsis">
-                          Внешние балансы
+                          Мои балансы
                         </p>
                         <p className="relative shrink-0 text-[color:#969fa8]">
                           {overview.balanceCount || null}

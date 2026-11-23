@@ -14,7 +14,7 @@ export const accountLabels = {
  internet: { name: 'Интернет', note: 'МГТС ·· 4218' },
 };
 export type BalanceOverviewSheet="attention"|"pin"|"autotopups"|"balance-notifications";
-export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,onConnect,onAdd,overviewSheet,onOverviewSheet,onCloseOverview,addedIndex}:{addedIndex?:number|null;cards:number[];balances:Balance[];settings:Settings[];pinnedIndex:number|null;onPin:(index:number)=>void;overviewSheet:BalanceOverviewSheet|null;onOverviewSheet:(sheet:BalanceOverviewSheet)=>void;onCloseOverview:()=>void;onOpen:(type:'card'|'balance',index:number)=>void;onConnect:(kind:ConnectionKind)=>void;onAdd:()=>void}){
+export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,onConnect,onAdd,overviewSheet,onOverviewSheet,onCloseOverview,addedIndex}:{addedIndex?:number|null;cards:number[];balances:Balance[];settings:Settings[];pinnedIndex:number|null;onPin:(index:number)=>void;overviewSheet:BalanceOverviewSheet|null;onOverviewSheet:(sheet:BalanceOverviewSheet)=>void;onCloseOverview:()=>void;onOpen:(type:'card'|'balance',index:number,screen?:'auto')=>void;onConnect:(kind:ConnectionKind)=>void;onAdd:()=>void}){
  const rows=[
   {...accountLabels.mobile,amount:balances[0].value,icon:balanceLogos[2],hidden:settings[2].hidden,type:'balance' as const,index:0},
   {name:'Тройка',note:'·· 4328',amount:cards[0],icon:balanceLogos[0],hidden:settings[0].hidden,type:'card' as const,index:0},
@@ -61,7 +61,7 @@ export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,on
     overviewSheet==='autotopups'&&automaticRows.length===0?'Выберите счёт для настройки автопополнения':
     overviewSheet==='balance-notifications'&&notifiedRows.length===0?'Выберите счёт для подключения уведомления':undefined
   }>
-    {sheetRows.length?sheetRows.map(row=>overviewSheet==='pin'?renderRow(row,()=>{onPin(accountIndex(row));onCloseOverview()}):renderRow(overviewSheet==='autotopups'?{...row,note:automaticRows.includes(row)?'Автопополнение включено':'Автопополнение выключено'}:overviewSheet==='balance-notifications'?{...row,note:notifiedRows.includes(row)?'Уведомления включены':'Уведомления выключены'}:row)):<p className="bn-empty">{overviewSheet==='attention'?'Все балансы в порядке':'Нет подключённых счетов'}</p>}
+    {sheetRows.length?sheetRows.map(row=>overviewSheet==='pin'?renderRow(row,()=>{onPin(accountIndex(row));onCloseOverview()}):overviewSheet==='autotopups'?renderRow({...row,note:automaticRows.includes(row)?'Автопополнение включено':'Автопополнение выключено'},()=>onOpen(row.type,row.index,'auto')):renderRow(overviewSheet==='balance-notifications'?{...row,note:notifiedRows.includes(row)?'Уведомления включены':'Уведомления выключены'}:row)):<p className="bn-empty">{overviewSheet==='attention'?'Все балансы в порядке':'Нет подключённых счетов'}</p>}
   </WalletModal>}
  </div>
 }

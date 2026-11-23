@@ -24,7 +24,7 @@ export function AutoTopup({index,name,title,logo,settings,onBack,onSave,initialM
   const positive=(value:string)=>value!==''&&Number.isFinite(Number(value))&&Number(value)>0;
   const valid=label.trim()!==''&&
     (mode==='monthly'?Number.isInteger(Number(day))&&Number(day)>=1&&Number(day)<=31:threshold!==''&&Number.isFinite(Number(threshold))&&Number(threshold)>=(mode==='constant'?10:0))&&
-    (mode==='constant'||positive(amount)&&Number(amount)>=10&&Number(amount)<=15000)&&
+    (mode==='constant'||positive(amount))&&
     (mode==='monthly'||!limited||positive(limit));
 
   return <section className="balance-flow-screen auto-screen" data-prototype-screen={`auto-topup/${mode}`} role="dialog" aria-modal="true" aria-labelledby="auto-title" onClick={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Escape')onBack()}}>
@@ -56,7 +56,7 @@ export function AutoTopup({index,name,title,logo,settings,onBack,onSave,initialM
             <p className="auto-help">{mode==='balance'?'Пополнять, когда баланс на карте ниже или равен указанному':'Пополнять до указанного баланса'}</p>
             <label className="auto-field"><input type="number" min={mode==='constant'?10:0} step="0.01" inputMode="decimal" aria-label={mode==='balance'?'Баланс, при котором пополнять':'Целевой баланс'} placeholder={mode==='balance'?'Баланс, при котором пополнять':'Целевой баланс'} value={threshold} onChange={event=>setThreshold(event.target.value)} required/></label>
           </>}
-          {mode!=='constant'&&<label className="auto-field"><input type="number" min="10" max="15000" step="0.01" inputMode="decimal" aria-label="Сумма пополнения" placeholder="Сумма пополнения" value={amount} onChange={event=>setAmount(event.target.value)} required/></label>}
+          {mode!=='constant'&&<label className="auto-field"><input type="number" min="0.01" step="0.01" inputMode="decimal" aria-label="Сумма пополнения" placeholder="Сумма пополнения" value={amount} onChange={event=>setAmount(event.target.value)} required/></label>}
           {mode!=='monthly'&&<div className="auto-limit"><span>Установить лимит в месяц</span><button className="auto-switch" type="button" role="switch" aria-label="Установить лимит в месяц" aria-checked={limited} onClick={()=>setLimited(value=>!value)}><i/></button></div>}
           {mode!=='monthly'&&limited&&<label className="auto-field"><input type="number" min="1" step="0.01" inputMode="decimal" aria-label="Лимит в месяц" placeholder="Лимит в месяц" value={limit} onChange={event=>setLimit(event.target.value)} required/></label>}
         </div>

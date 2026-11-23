@@ -254,6 +254,6 @@ export function BalanceDetail({index,name,value,settings,onSettings,onTopup,onCl
  </section>
 
  <div className="balance-history"><h3>Последние пополнения</h3>{settings.history.slice(0,3).map((item,i)=><div className="balance-history-row" key={i}><span className="balance-history-icon"><img src={historyArrow} alt=""/></span><span>С карты ·· 4417<small>{item.date}</small></span><strong>+{rub(item.amount)}</strong></div>)}</div>
- <button className="subscription-hide" onClick={onHide}>Удалить из «Внешние балансы»</button>
+ <button className="subscription-hide" onClick={onHide}>Удалить из «Мои балансы»</button>
  </section>
 }
