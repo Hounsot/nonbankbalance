@@ -55,7 +55,7 @@ export function BalancesNew({cards,balances,settings,pinnedIndex,onPin,onOpen,on
    </div>
    {lowRows.length>0&&<button className="bn-status-banner" aria-haspopup="dialog" onClick={()=>onOverviewSheet('attention')}><img src={warning} alt=""/><span>{attentionLabel}</span><img src={chevron} alt=""/></button>}
   </div>
-  {visibleRows.length>0&&<section className="bn-list"><h2>Ваши балансы</h2>{visibleRows.map(row=>renderRow(row))}</section>}
+  {visibleRows.length>0&&<section className="bn-list"><h2>Балансы в других сервисах</h2>{visibleRows.map(row=>renderRow(row))}</section>}
 <section className="bn-offers"><h2>Выберите, что добавить</h2><BalanceOfferGrid onSelect={onConnect}/></section>
   {overviewSheet&&<WalletModal compact title={sheetTitle} onClose={onCloseOverview} description={
     overviewSheet==='autotopups'&&automaticRows.length===0?'Выберите счёт для настройки автопополнения':

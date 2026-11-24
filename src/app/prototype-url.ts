@@ -31,7 +31,7 @@ export function usePrototypeUrl(rootRef: RefObject<HTMLElement | null>) {
       url.searchParams.set('scenario', root.dataset.prototypeScenario || 'filled');
       const active = Array.from(root.querySelectorAll<HTMLElement>('[data-prototype-screen]')).reverse().find(node => !node.closest('[data-prototype-inactive]'));
       const heading = active?.querySelector('h1, h2, [role="heading"]')?.textContent?.trim();
-      document.title = heading || ({ home: 'Главная', payments: 'Платежи', wallet: 'Мои балансы' } as Record<string, string>)[screen] || screen;
+      document.title = heading || ({ home: 'Главная', payments: 'Платежи', wallet: 'Балансы в других сервисах' } as Record<string, string>)[screen] || screen;
       if (url.href !== window.location.href) {
         if (initial) window.history.replaceState(window.history.state, '', url);
         else if (!restoring) window.history.pushState(window.history.state, '', url);

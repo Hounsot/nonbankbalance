@@ -185,9 +185,10 @@ function CurrencyWidget({ className }: { className?: string }) {
 type MyMoneyProps = {
   className?: string;
   loading?: "no";
+  total: number;
 };
 
-function MyMoney({ className, loading = "no" }: MyMoneyProps) {
+function MyMoney({ className, loading = "no", total }: MyMoneyProps) {
   return (
     <div className={className || "bg-[var(--background\/lower,#f2f3f7)] content-stretch flex flex-col gap-[var(--0,0px)] items-start overflow-clip p-[var(--0,0px)] relative w-[360px]"}>
       <div className="content-stretch flex flex-col gap-[var(--0,0px)] items-start p-[var(--0,0px)] shrink-0 sticky top-0 w-full">
@@ -213,7 +214,7 @@ function MyMoney({ className, loading = "no" }: MyMoneyProps) {
                   </div>
                 </div>
                 <p className="[word-break:break-word] font-['MTS_Compact:Medium'] leading-[0] not-italic relative shrink-0 text-[17px] text-[color:#1d2023] whitespace-nowrap">
-                  <span className="leading-[24px]">1 116 106</span>
+                  <span className="leading-[24px]">{new Intl.NumberFormat('ru-RU').format(total)}</span>
                   <span className="leading-[24px] text-[#1d2023]">{` ₽`}</span>
                 </p>
               </div>
@@ -414,7 +415,7 @@ export function MainScreen({ overview, onBalances }: { overview: WalletOverview;
           </div>
         <SliceStack>
         <div className="home-products">
-          <MyMoney className=" content-stretch flex flex-col gap-[var(--0,0px)] items-start overflow-clip p-[var(--0,0px)] shrink-0 relative w-full" />
+          <MyMoney total={16106 + 532144 + overview.balanceTotal} className=" content-stretch flex flex-col gap-[var(--0,0px)] items-start overflow-clip p-[var(--0,0px)] shrink-0 relative w-full" />
           <div className="w-full pb-[24px]">
             <div className="grid grid-cols-2 gap-2 px-5">
               <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--0,0px)] h-[140px] items-start max-h-[140px] min-h-[140px] min-w-0 p-[var(--0,0px)] relative">
@@ -463,7 +464,7 @@ export function MainScreen({ overview, onBalances }: { overview: WalletOverview;
               </div>
               <div className="content-stretch flex flex-[1_0_0] flex-col h-[140px] items-start max-h-[140px] min-h-[140px] min-w-0 relative">
                 <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--0,0px)] items-start min-h-px p-[var(--0,0px)] relative w-full">
-                  <button type="button" onClick={onBalances} aria-label="Мои балансы" className="bg-white text-left font-normal content-stretch flex flex-[1_0_0] flex-col items-start justify-between min-h-px p-4 relative rounded-[20px] w-full">
+                  <button type="button" onClick={onBalances} aria-label="Другие балансы" className="bg-white text-left font-normal content-stretch flex flex-[1_0_0] flex-col items-start justify-between min-h-px p-4 relative rounded-[20px] w-full">
                     <div className="bg-[#f2f3f7] content-stretch flex items-start overflow-clip relative rounded-[16px] shrink-0">
                       <div className="relative shrink-0 size-[52px]">
                         <img alt="" className="absolute block inset-0 max-w-none size-full" height="52" src={imgImage2} width="52" />
@@ -472,7 +473,7 @@ export function MainScreen({ overview, onBalances }: { overview: WalletOverview;
                     <div className="[word-break:break-word] content-stretch flex flex-col gap-[var(--0,0px)] h-[40px] items-start justify-end leading-[20px] not-italic p-[var(--0,0px)] relative shrink-0 w-full whitespace-nowrap">
                       <div className="content-stretch flex font-['MTS_Compact:Regular'] gap-[var(--4,4px)] items-center relative shrink-0 text-[14px] w-full">
                         <p className="overflow-hidden relative shrink-0 text-[color:#1d2023] text-ellipsis">
-                          Мои балансы
+                          Другие балансы
                         </p>
                         <p className="relative shrink-0 text-[color:#969fa8]">
                           {overview.balanceCount || null}

@@ -11,7 +11,7 @@ const content: Record<Step, { title: string; description: string }> = {
   choose: { title: 'Выберите тип счёта', description: 'Укажите, какой баланс хотите добавить.' },
   form: { title: 'Введите данные', description: 'Заполните данные счёта и продолжите подключение.' },
   name: { title: 'Назовите карту', description: 'Придумайте название, чтобы легко найти её в разделе.' },
-  added: { title: 'Баланс добавлен', description: 'Теперь он отображается в разделе «Ваши балансы».' },
+  added: { title: 'Баланс добавлен', description: 'Теперь он отображается в разделе «Балансы в других сервисах».' },
 };
 
 export function BalanceGuide({ rootRef, step, onDismiss, empty = false }: {
