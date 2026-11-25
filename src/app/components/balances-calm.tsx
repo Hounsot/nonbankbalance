@@ -12,9 +12,13 @@ import { ChevronLeft, X } from 'lucide-react';
 import './wallet-base.css';
 import './balances-calm.css';
 const initial: {name:string;note:string;value:number;service?:BalanceService}[] = [{name:'МТС', note:'·· 4218', value:56}, {name:'Домашний интернет',note:'МТС Home ·· 3341',value:-120}, {name:'Парковки Москвы',note:'А 777 ВС 77',value:520}];
+const previewBalances = {
+ card: { name: 'Транспортная карта', note: '·· 4328', value: 0, service: 'card' },
+ avtodor: { name: 'Автодор', note: '·· 5808', value: 0, service: 'avtodor' },
+} satisfies Partial<Record<BalanceService, NewBalance>>;
 const money=(n:number)=>n.toLocaleString('ru-RU')+' ₽';
 export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boolean;onBack?:()=>void;entry?:WalletEntry;onOverview?:(overview:WalletOverview)=>void}){
- const [accountSettings,setAccountSettings]=useState<BalanceSettings[]>(()=>[...balanceSettings.map((s,i)=>({...s,hidden:empty,...(entry?.autoTopupConnected&&i===(entry.card??0)?{auto:true,autoMode:'balance' as const,autoThreshold:200,autoAmount:500}:{})})), ...(entry?.sampleService||entry?.cardAdded?[{auto:false,notify:false,history:[]}]:[])]);
+ const [accountSettings,setAccountSettings]=useState<BalanceSettings[]>(()=>[...balanceSettings.map((s,i)=>({...s,hidden:empty,...(entry?.autoTopupConnected&&i===entry.card?{auto:true,autoMode:'balance' as const,autoThreshold:200,autoAmount:500}:{})})), ...(entry?.cardAdded?[{auto:false,notify:false,history:[]}]:[])]);
  const [subscriptions,setSubscriptions]=useState<Subscription[]>(()=>startingSubscriptions.map(s=>({...s,hidden:empty,active:!empty})));
  const subscriptionTotal=subscriptions.reduce((sum,s)=>sum+(s.active&&!s.hidden?s.price:0),0);
  const subscriptionCount=subscriptions.filter(s=>!s.hidden&&s.active).length;
@@ -31,8 +35,12 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const scrollRef=useRef<HTMLDivElement>(null);
  const [pinnedIndex,setPinnedIndex]=useState<number|null>(empty?null:0);
  const [tab,setTab]=useState<'balances'|'subscriptions'>('balances');
+ const [previewSettings, setPreviewSettings] = useState<BalanceSettings | null>(null);
+ const [previewTopup, setPreviewTopup] = useState(0);
  useLayoutEffect(() => {
   if (!entry) return;
+  setPreviewSettings(null);
+  setPreviewTopup(0);
   setTab(entry.tab);
   setConnectStep({ naming: entry.naming, manual: entry.manual });
   setConnectionKind(entry.add ?? null);
@@ -44,13 +52,13 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
   } else if (entry.card !== undefined || entry.sampleService) {
    const card = entry.card ?? initial.length + 2;
    setSheet({ type: card >= 2 ? 'balance' : 'card', index: card >= 2 ? card - 2 : card,
-    topup: entry.topup, detailScreen: entry.detailScreen, autoMode: entry.autoMode, topupSuccess: entry.topupSuccess });
+    topup: entry.topup, detailScreen: entry.detailScreen, autoMode: entry.autoMode, topupSuccess: entry.topupSuccess, sampleService: entry.sampleService, autoTopupConnected: entry.autoTopupConnected });
   } else setSheet(null);
   scrollRef.current?.scrollTo({ top: 0 });
  }, [entry]);
- const [balances,setBalances]=useState(()=>entry?.cardAdded?[...initial,{name:'Транспортная карта',note:'·· 4328',value:0,service:'card' as BalanceService}]:initial); const [cards,setCards]=useState([1340,480]);
+ const [balances,setBalances]=useState(()=>entry?.cardAdded?[...initial,previewBalances.card]:initial); const [cards,setCards]=useState([1340,480]);
  useEffect(()=>{onOverview?.({items:[{name:'Тройка',note:'·· 4328',value:cards[0]-440,icon:balanceLogos[0],index:0},{name:'Мобильная связь',note:accountLabels.mobile.note,value:balances[0].value+128,icon:balanceLogos[2],index:2},{name:'Интернет',note:accountLabels.internet.note,value:balances[1].value,icon:balanceLogos[3],index:3},{name:'Парковки России',note:'А 777 ВС 77',value:balances[2].value,icon:balanceLogos[4],index:4},...balances.slice(3).map((b,i)=>({name:b.name,note:b.note,value:b.value,icon:balanceLogos[balanceServiceLogo(b.service!)],index:i+5}))].filter(item=>!accountSettings[item.index]?.hidden),attentionCount:balances.filter((b,i)=>!accountSettings[i+2].hidden&&b.value<0).length,phoneBalance:accountSettings[2].hidden?undefined:balances[0].value,quickBalances:{troika:accountSettings[0].hidden?undefined:cards[0],social:accountSettings[1].hidden?undefined:cards[1],parking:accountSettings[4].hidden?undefined:balances[2].value},debt:balances.reduce((sum,b,i)=>sum+(accountSettings[i+2].hidden?0:Math.max(0,-b.value)),0),nextSubscription:subscriptions.map((s,index)=>({...s,index})).filter(s=>s.active&&!s.hidden).sort((a,b)=>a.days-b.days)[0],troika:accountSettings[0].hidden?0:cards[0],hasTroika:!accountSettings[0].hidden,subscriptionTotal,cards:cards.filter((_,i)=>!accountSettings[i].hidden),subscriptionCount,balanceCount:visibleBalanceCount,balanceTotal:cards.reduce((a,b,i)=>a+(accountSettings[i].hidden?0:b-(i===0?440:0)),0)+balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:b.value+(i===0?128:0)),0)})},[cards,balances,subscriptions,subscriptionTotal,subscriptionCount,accountSettings,onOverview]);
- const [sheet,setSheet]=useState<null|({type:string,index?:number} & Pick<WalletEntry,'topup'|'detailScreen'|'autoMode'|'topupSuccess'>)>(null);const [amount,setAmount]=useState(500);const [paid,setPaid]=useState(false);const [notifications,setNotifications]=useState(true);
+ const [sheet,setSheet]=useState<null|({type:string,index?:number} & Pick<WalletEntry,'topup'|'detailScreen'|'autoMode'|'topupSuccess'|'sampleService'|'autoTopupConnected'>)>(null);const [amount,setAmount]=useState(500);const [paid,setPaid]=useState(false);const [notifications,setNotifications]=useState(true);
  const open=(type:string,index?:number,detailScreen?:'auto')=>{setCardAdded(false);if(guide==='added')setGuide(null);setConnectStep({});setSheet({type,index,detailScreen});setPaid(false);setAmount(500)};
  const debt=balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:Math.max(0,-b.value)),0);const total=cards.reduce((a,b,i)=>a+(accountSettings[i].hidden?0:b),0)+balances.reduce((a,b,i)=>a+(accountSettings[i+2].hidden?0:b.value),0);
  const newCards=[cards[0]-1340+900,cards[1]];
@@ -58,9 +66,20 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const displayedCards=newCards;
  const displayedBalances=newAccounts;
 
- const detailIndex=(sheet?.index??0)+(sheet?.type==='balance'?2:0);
- const name=sheet?.type==='card' ? ['Тройка','Социальная карта'][sheet.index||0] : balances[sheet?.index||0].name;
- const addedBalance=sheet?.type==='balance'&&balances[sheet.index??0]?.service?balances[sheet.index??0]:undefined;
+ const detail = sheet?.type === 'card' || sheet?.type === 'balance' ? sheet : null;
+ const sampleIndex = detail?.sampleService
+  ? balances.findIndex((balance, index) => balance.service === detail.sampleService && !accountSettings[index + 2].hidden)
+  : -1;
+ const detailRow = detail?.sampleService ? sampleIndex : detail?.index ?? 0;
+ const detailIndex = detailRow + (detail?.type === 'balance' ? 2 : 0);
+ const previewBalance = detailRow < 0 && detail?.sampleService
+  ? (previewBalances as Partial<Record<BalanceService, NewBalance>>)[detail.sampleService]
+  : undefined;
+ const detailBalance = detail?.type === 'balance' ? displayedBalances[detailRow] ?? previewBalance : undefined;
+ const detailName = detail?.type === 'card' ? ['Тройка', 'Социальная карта'][detailRow] : detailBalance?.name;
+ const detailSettings = previewBalance
+  ? previewSettings ?? { auto: !!detail?.autoTopupConnected, notify: false, history: [] }
+  : accountSettings[detailIndex];
  const addBalance=(balance:NewBalance)=>{
   setCardAdded(balance.service==='card');
   const guided = guide==='form' || guide==='name';
@@ -112,7 +131,7 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  const header=<header className="calm-header"><button className="wallet-back" aria-label="Назад" type="button" onClick={onBack}><ChevronLeft size={20}/></button><h1>{tab==='subscriptions'?'Подписки':'Балансы в других сервисах'}</h1></header>;
  const service = sheet?.type === 'card'
   ? (sheet.index === 1 ? 'social-card' : 'troika')
-  : addedBalance?.service ?? ['mobile', 'internet', 'parking'][sheet?.index ?? 0] ?? 'account';
+  : detailBalance?.service ?? ['mobile', 'internet', 'parking'][sheet?.index ?? 0] ?? 'account';
  const walletScreen = ['wallet', tab, !sheet && cardAdded ? 'card-added' : sheet?.type,
   sheet?.type === 'card' || sheet?.type === 'balance' ? service : undefined,
   sheet?.type === 'subscription' ? sheet.index : undefined,
@@ -122,7 +141,42 @@ export function BalancesCalm({onBack,entry,onOverview,empty=false}:{empty?:boole
  {header}
  <BalancesNew addedIndex={addedIndex} pinnedIndex={pinnedIndex} onPin={setPinnedIndex} overviewSheet={sheet?.type==='attention'||sheet?.type==='pin'||sheet?.type==='autotopups'||sheet?.type==='balance-notifications'?sheet.type:null} onOverviewSheet={open} onCloseOverview={()=>setSheet(null)} cards={displayedCards} balances={displayedBalances} settings={accountSettings} onOpen={(type,index,detailScreen)=>open(type,index,detailScreen)} onConnect={beginConnect} onAdd={()=>{setConnectionKind(null);open('connect')}}/>
  </div>
- {sheet&&['card','balance'].includes(sheet.type)&&<div className="bc-overlay" onClick={()=>setSheet(null)}><BalanceDetail accountNote={addedBalance?.note} serviceIndex={addedBalance?.service ? balanceServiceLogo(addedBalance.service) : undefined} pinned={pinnedIndex===detailIndex} onTogglePin={detailIndex===1?undefined:()=>setPinnedIndex(current=>current===detailIndex?null:detailIndex)} startTopup={sheet.topup} initialScreen={sheet.detailScreen} initialAutoMode={sheet.autoMode} previewSuccess={sheet.topupSuccess} key={sheet.type+sheet.index+!!sheet.topup} name={name} index={sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2} value={sheet.type==='card'?displayedCards[sheet.index||0]:displayedBalances[sheet.index||0].value} settings={accountSettings[sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2]} onHide={()=>{const key=sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2;setAccountSettings(all=>all.map((s,i)=>i===key?{...s,hidden:true}:s));setSheet(null)}} onClose={()=>setSheet(null)} onSettings={next=>setAccountSettings(all=>all.map((s,i)=>i===(sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2)?next:s))} onTopup={amount=>{const key=sheet.type==='card'?(sheet.index||0):(sheet.index||0)+2;if(sheet.type==='card')setCards(all=>all.map((v,i)=>i===sheet.index?v+amount:v));else setBalances(all=>all.map((v,i)=>i===sheet.index?{...v,value:v.value+amount}:v));setAccountSettings(all=>all.map((s,i)=>i===key?{...s,history:[{amount,date:'Сегодня'},...s.history].slice(0,3)}:s))}}/></div>}
+ {detail && detailName !== undefined && detailSettings && <div className="bc-overlay" onClick={()=>setSheet(null)}>
+  <BalanceDetail
+   key={detail.type + detailRow + (detail.sampleService ?? '') + !!detail.topup}
+   index={previewBalance ? balances.length + 2 : detailIndex}
+   name={detailName}
+   accountNote={detailBalance?.service ? detailBalance.note : undefined}
+   serviceIndex={detailBalance?.service ? balanceServiceLogo(detailBalance.service) : undefined}
+   value={detail.type === 'card' ? displayedCards[detailRow] : (detailBalance?.value ?? 0) + (previewBalance ? previewTopup : 0)}
+   settings={detailSettings}
+   pinned={!previewBalance && pinnedIndex === detailIndex}
+   onTogglePin={previewBalance || detailIndex === 1 ? undefined : () => setPinnedIndex(current => current === detailIndex ? null : detailIndex)}
+   startTopup={detail.topup}
+   initialScreen={detail.detailScreen}
+   initialAutoMode={detail.autoMode}
+   previewSuccess={detail.topupSuccess}
+   onClose={()=>setSheet(null)}
+   onHide={()=>{
+    if (!previewBalance) setAccountSettings(all=>all.map((settings,index)=>index===detailIndex?{...settings,hidden:true}:settings));
+    setSheet(null);
+   }}
+   onSettings={next=>{
+    if (previewBalance) setPreviewSettings(next);
+    else setAccountSettings(all=>all.map((settings,index)=>index===detailIndex?next:settings));
+   }}
+   onTopup={amount=>{
+    if (previewBalance) {
+     setPreviewTopup(value => value + amount);
+     setPreviewSettings({ ...detailSettings, history: [{ amount, date: 'Сегодня' }, ...detailSettings.history].slice(0, 3) });
+     return;
+    }
+    if (detail.type === 'card') setCards(all=>all.map((value,index)=>index===detailRow?value+amount:value));
+    else setBalances(all=>all.map((balance,index)=>index===detailRow?{...balance,value:balance.value+amount}:balance));
+    setAccountSettings(all=>all.map((settings,index)=>index===detailIndex?{...settings,history:[{amount,date:'Сегодня'},...settings.history].slice(0,3)}:settings));
+   }}
+  />
+ </div>}
  {sheet?.type==='connect'&&<WalletConnect foundAccounts={foundAccounts} onAddFound={addFoundAccounts} onNamingChange={naming=>{if(guide==='form'||guide==='name')setGuide(naming?'name':'form')}} initialNaming={connectStep.naming} initialManual={connectStep.manual} onAddBalance={addBalance} onCustom={subscription=>{setSubscriptions(all=>[...all,subscription]);setTab('subscriptions');setSheet(null);setGuide(null)}} kind={connectionKind} onKind={kind=>{setConnectionKind(kind);if(guide==='choose')setGuide('form')}} onChoose={connect} onClose={()=>{setSheet(null);setGuide(null)}}/>}
  {sheet?.type==='discovered'&&<div className="bc-overlay discovered-overlay" onClick={()=>{setSheet(null);setDiscoveryDismissed(true);setGuide('add')}}>
  <section className="discovered-modal" role="dialog" aria-modal="true" aria-labelledby="discovered-title" aria-describedby="discovered-description" onClick={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();setSheet(null);setDiscoveryDismissed(true);setGuide('add')}}}>
